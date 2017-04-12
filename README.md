@@ -31,18 +31,17 @@ For example, if the user has the total of 512 MiB of RAM the value would be 0.5.
 HTTP caching doesn't deal well with mixed value headers, therefore separate headers are recommended. Also, rounding down to power of two enables caching and mitigates fingerprinting.
 
 #### When is the header sent? 
-Currently Client Hints cannot be used to enable providing network performance data on the first request, however this is being actively addressed with this proposal.
+Currently Client Hints cannot be used to enable providing network performance data on the first request, however this is being actively addressed with [this proposal](https://github.com/httpwg/http-extensions/issues/306#issuecomment-283549512).
 Once this is resolved, the header is sent after an explicit per-origin opt-in via Client Hints mechanism. The following new hint will be added: Accept-CH: device-ram
 
-For background, Client Hints provides a set of HTTP request header fields, known as Client Hints, to deliver content that is optimized for the device. In that sense using Client Hints is a great fit for this proposal.
+For background, [Client Hints](http://httpwg.org/http-extensions/client-hints.html) provides a set of HTTP request header fields, known as Client Hints, to deliver content that is optimized for the device. In that sense using Client Hints is a great fit for this proposal.
 The web exposed API
 We propose adding the following API to navigator: 
 navigator.deviceRam
 which returns number of GiB of ram (floating point number) rounded down to the nearest power of two (same as the header).
 
 ### The web exposed API
-We propose adding the following API to navigator: 
-navigator.deviceRam
+We propose adding the following API to navigator: `navigator.deviceRam`
 which returns number of GiB of ram (floating point number) rounded down to the nearest power of two (same as the header).
 
 #### Why not surface Device Class directly?
