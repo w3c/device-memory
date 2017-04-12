@@ -32,10 +32,10 @@ HTTP caching doesn't deal well with mixed value headers, therefore separate head
 
 #### When is the header sent? 
 Currently Client Hints cannot be used to enable providing network performance data on the first request, however this is being actively addressed with [this proposal](https://github.com/httpwg/http-extensions/issues/306#issuecomment-283549512).
-Once this is resolved, the header is sent after an explicit per-origin opt-in via Client Hints mechanism. The following new hint will be added: Accept-CH: device-ram
+The header is sent after an explicit per-origin opt-in via Client Hints mechanism. The following new hint will be added: `Accept-CH: device-ram`
 
 For background, [Client Hints](http://httpwg.org/http-extensions/client-hints.html) provides a set of HTTP request header fields, known as Client Hints, to deliver content that is optimized for the device. In that sense using Client Hints is a great fit for this proposal.
-
+Client Hints recently addressed a [significant limitation in spec](https://github.com/httpwg/http-extensions/issues/306#issuecomment-283549512): opt-in can now be persisted across browser restarts using `max-age` in header.
 
 ### The web exposed API
 We propose adding the following API to navigator: `navigator.deviceRam`
