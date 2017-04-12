@@ -5,9 +5,9 @@
 To support a diverse web ecosystem that is inclusive of users on low end devices, apps need to be able to tailor their content to the device constraints. This allows users to consume content suited to their device, and ensures they have a good experience and fewer frustrations.
 
 Developers are interested in the “device-class” for the following known use-cases:
-1. Serve a “lite” version of the site or specific components, for low end devices. Egs.
+1. Serve a “light” version of the site or specific components, for low end devices. Egs.
 - Google’s "search lite" is a 10KB search results page used in EM. 
-- Serve a lite version of video player in Facebook
+- Serve a light version of video player in Facebook
 - Serve lightweight tile images in Google Maps
 2. Normalize Metrics: analytics need to be able to normalize their metrics against the device-class. 
 For instance, a 100ms long tasks on a Pixel is a more severe issue vs. on a low end device.
