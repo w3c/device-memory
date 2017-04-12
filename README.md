@@ -35,16 +35,13 @@ Currently Client Hints cannot be used to enable providing network performance da
 Once this is resolved, the header is sent after an explicit per-origin opt-in via Client Hints mechanism. The following new hint will be added: Accept-CH: device-ram
 
 For background, [Client Hints](http://httpwg.org/http-extensions/client-hints.html) provides a set of HTTP request header fields, known as Client Hints, to deliver content that is optimized for the device. In that sense using Client Hints is a great fit for this proposal.
-The web exposed API
-We propose adding the following API to navigator: 
-navigator.deviceRam
-which returns number of GiB of ram (floating point number) rounded down to the nearest power of two (same as the header).
+
 
 ### The web exposed API
 We propose adding the following API to navigator: `navigator.deviceRam`
 which returns number of GiB of ram (floating point number) rounded down to the nearest power of two (same as the header).
 
-#### Why not surface Device Class directly?
+## Why not surface Device Class directly?
 While exposing a composite “Device Class” would be useful for developers, it has a number of challenges: it’s hard to specify in a future-proof manner as it is constantly changing, it requires significant and ongoing work (constantly update algorithm OR classify known devices), it is difficult to reach agreement amongst vendors, and come up with something that works for all web sites etc.
 While this is something worth considering down the road, we think we can get most of the benefit by exposing a couple of specific signals device memory and device CPU cores. In particular device memory is a reasonable proxy for device class.
 
