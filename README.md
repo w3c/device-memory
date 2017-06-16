@@ -24,8 +24,24 @@ ASIDE: the JS API for CPU Cores is already available via hardwareConcurrency API
 ### The Header
 Proposed Header for memory: `device-ram`
 `device-ram : <value>`
-where `<value>` is the number of GiB of ram (floating point number) rounded down to the nearest power of two.
-For example, if the user has the total of 512 MiB of RAM the value would be 0.5. If they have 768 MiB of ram it would also be 0.5. If they have 3 GiB of RAM the value would be 2.
+where `<value>` is an approximation the amount of ram in GiB (floating point number). The `<value>` is calculated by using the actual device memory in MiB then rounding it to the smallest nearest number where only the 2 most signicant bits can be set and the rest are zeros (i.e of the binary form `((1|11)0*)`). Then diving that number by 1024.0 to get the value in GiB.
+
+The following table illustrates some examples:
+
+| Actual in MiB | Rounded in MiB | Reported in GiB |
+|---------------|----------------|-----------------|
+| 500           | 512            | 0.5             |
+| 512           | 512            | 0.5             |
+| 768           | 768            | 0.75            |
+| 1000          | 1024           | 1               |
+| 1500          | 1536           | 1.5             |
+| 1792          | 1536           | 1.5             |
+| 1793          | 2048           | 2               |
+
+
+A conclusive list of all possible values between 0.25Gib and 128GiB is as follow:
+
+0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128
 
 #### Why separate header and rounding?
 HTTP caching doesn't deal well with mixed value headers, therefore separate headers are recommended. Also, rounding down to power of two enables caching and mitigates fingerprinting.
