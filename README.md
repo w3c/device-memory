@@ -22,8 +22,8 @@ The JS API will enable clients to make appropriate decisions eg. using more stor
 ASIDE: the JS API for CPU Cores is already available via hardwareConcurrency API
 
 ### The Header
-Proposed Client Hints Header for memory: `device-ram`
-`device-ram : <value>`
+Proposed Client Hints Header for memory: `device-ram`\
+`device-ram : <value>`\
 where `<value>` is an approximation the amount of ram in GiB (floating point number). The `<value>` is calculated by using the actual device memory in MiB then rounding it to the smallest nearest number where only the 2 most signicant bits can be set and the rest are zeros (i.e of the binary form `((1|11)0*)`). Then diving that number by 1024.0 to get the value in GiB.
 
 The following table illustrates some examples:
