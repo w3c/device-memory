@@ -15,14 +15,14 @@ For instance, a 100ms long tasks on a Pixel is a more severe issue vs. on a low 
 Device memory is an interesting signal in this context. Low memory devices devices (under 512MB, 512MB - 1GB) are widely used in emerging markets. Chrome telemetry indicates large number of OOM (out-of-memory) crashes on foreground tabs on these devices. In this case, serving a lite version not only improves the user experience, it is necessary for the site to be usable at all (as opposed to crashing due to memory constraint).
 
 ## Proposal
-We propose a header and web exposed API to surface device capability for memory (RAM). The mechanism should be extensible to other device capabilities such as CPU i.e. number of cores, clock speed etc.
-A header will enable the server to deliver appropriate content, eg. a “lite” version of the site.
+We propose a new HTTP Client Hints header and a web exposed API to surface device capability for memory (RAM). The mechanism should be extensible to other device capabilities such as CPU i.e. number of cores, clock speed etc.
+A Client Hints header will enable the server to deliver appropriate content, eg. a “lite” version of the site.
 The JS API will enable clients to make appropriate decisions eg. using more storage vs. making additional requests, requesting appropriate resources from the server etc.
 
 ASIDE: the JS API for CPU Cores is already available via hardwareConcurrency API
 
 ### The Header
-Proposed Header for memory: `device-ram`
+Proposed Client Hints Header for memory: `device-ram`
 `device-ram : <value>`
 where `<value>` is an approximation the amount of ram in GiB (floating point number). The `<value>` is calculated by using the actual device memory in MiB then rounding it to the smallest nearest number where only the 2 most signicant bits can be set and the rest are zeros (i.e of the binary form `((1|11)0*)`). Then diving that number by 1024.0 to get the value in GiB.
 
@@ -47,7 +47,7 @@ A conclusive list of all possible values between 0.25Gib and 128GiB is as follow
 HTTP caching doesn't deal well with mixed value headers, therefore separate headers are recommended. Also, rounding down to power of two enables caching and mitigates fingerprinting.
 
 #### When is the header sent? 
-Currently Client Hints cannot be used to enable providing network performance data on the first request, however this is being actively addressed with [this proposal](https://github.com/httpwg/http-extensions/issues/306#issuecomment-283549512).
+Client Hints cannot be used to enable providing network performance data on the first request, however this is being actively addressed with [this proposal](https://github.com/httpwg/http-extensions/issues/306#issuecomment-283549512).
 The header is sent after an explicit per-origin opt-in via Client Hints mechanism. The following new hint will be added: `Accept-CH: device-ram`
 
 For background, [Client Hints](http://httpwg.org/http-extensions/client-hints.html) provides a set of HTTP request header fields, known as Client Hints, to deliver content that is optimized for the device. In that sense using Client Hints is a great fit for this proposal.
