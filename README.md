@@ -67,10 +67,11 @@ Requiring per-origin opt-in with Accept-CH restricts when the header is advertis
 Restricting to a ceiling value (rounded down to the nearest power of two), as opposed to exact value, reduces fingerprinting risk. This can be further restricted to returning values only for low memory cases i.e. less than 1GB.
 
 ## Relevant Links
-https://github.com/facebook/device-year-class
-https://github.com/igrigorik/http-client-hints
-https://developers.google.com/web/updates/2015/09/automating-resource-selection-with-client-hints
-https://github.com/WICG/netinfo/issues/46
-https://developer.mozilla.org/en-US/docs/Web/API/NavigatorConcurrentHardware
+
+* [Facebook's device year class](https://github.com/facebook/device-year-class)
+* [HTTP Client Hints](https://github.com/igrigorik/http-client-hints)
+* [HTTP Client Hints User Guide](https://developers.google.com/web/updates/2015/09/automating-resource-selection-with-client-hints)
+* [Similar proposal for Network Speed](https://github.com/WICG/netinfo/issues/46)
+* [NavigatorConcurrentHardware API](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorConcurrentHardware)
 
 
