@@ -54,7 +54,7 @@ For background, [Client Hints](http://httpwg.org/http-extensions/client-hints.ht
 Client Hints recently addressed a [significant limitation in spec](https://github.com/httpwg/http-extensions/issues/306#issuecomment-283549512): opt-in can now be persisted across browser restarts using `max-age` in header.
 
 ### The web exposed API
-We propose adding the following API to navigator: `navigator.deviceRam`
+We propose adding the following API to navigator: `navigator.deviceRAM`
 which returns number of GiB of ram (floating point number) rounded down to the nearest power of two (same as the header).
 
 ## Why not surface Device Class directly?
