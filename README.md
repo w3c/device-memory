@@ -65,7 +65,8 @@ While this is something worth considering down the road, we think we can get mos
 ## Security & Privacy
 See Security section in Client Hints.
 Requiring per-origin opt-in with Accept-CH restricts when the header is advertised.
-Restricting to a ceiling value (rounded down to the nearest power of two), as opposed to exact value, reduces fingerprinting risk. This can be further restricted to returning values only for low memory cases i.e. less than 1GB.
+Restricting to a ceiling value (rounded to 2 most signicant bits), as opposed to exact value, reduces fingerprinting risk. 
+NOTE: Device identification is already possible and rampant today, based on UA string. E.g. https://deviceatlas.com/products/web
 
 ## Relevant Links
 
