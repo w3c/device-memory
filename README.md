@@ -1,4 +1,4 @@
-# Device RAM
+# Device Memory
 
 ## Motivation & Use-cases
 “one-size-fits-all” web experience does not work in a world with widely varying device capabilities. Web apps that delight users on high end devices can be unusable on low end devices, particularly in emerging markets.
@@ -22,8 +22,8 @@ The JS API will be a convenience for analytics reporting and may be used to make
 ASIDE: the JS API for CPU Cores is already available via hardwareConcurrency API
 
 ### The Header
-Proposed Client Hints Header for memory: `device-ram`\
-`device-ram : <value>`\
+Proposed Client Hints Header for memory: `memory`\
+`memory : <value>`\
 where `<value>` is an approximation the amount of ram in GiB (floating point number).\
 The `<value>` is calculated by using the actual device memory in MiB then rounding it to the smallest nearest number where only the 2 most signicant bits can be set and the rest are zeros (i.e of the binary form `((1|11)0*)`). Then diving that number by 1024.0 to get the value in GiB.
 
@@ -49,13 +49,13 @@ HTTP caching doesn't deal well with mixed value headers, therefore separate head
 
 #### When is the header sent? 
 Client Hints cannot be used to enable providing network performance data on the first request, however this is being actively addressed with [this proposal](https://github.com/httpwg/http-extensions/issues/306#issuecomment-283549512).
-The header is sent after an explicit per-origin opt-in via Client Hints mechanism. The following new hint will be added: `Accept-CH: device-ram`
+The header is sent after an explicit per-origin opt-in via Client Hints mechanism. The following new hint will be added: `Accept-CH: memory`
 
 For background, [Client Hints](http://httpwg.org/http-extensions/client-hints.html) provides a set of HTTP request header fields, known as Client Hints, to deliver content that is optimized for the device. In that sense using Client Hints is a great fit for this proposal.
 Client Hints recently addressed a [significant limitation in spec](https://github.com/httpwg/http-extensions/issues/306#issuecomment-283549512): opt-in can now be persisted across browser restarts using `max-age` in header.
 
 ### The web exposed API
-We propose adding the following API to navigator: `navigator.deviceRAM`
+We propose adding the following API to navigator: `navigator.memory`
 which returns number of GiB of ram (floating point number) rounded down to the nearest power of two (same as the header).
 
 ## Why not surface Device Class directly?
