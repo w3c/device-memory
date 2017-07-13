@@ -17,14 +17,15 @@ Device memory is an interesting signal in this context. Low memory devices devic
 ## Proposal
 We propose a new HTTP Client Hints header and a web exposed API to surface device capability for memory (RAM). The mechanism should be extensible to other device capabilities such as CPU i.e. number of cores, clock speed etc.
 A Client Hints header will enable the server to deliver appropriate content, eg. a “lite” version of the site.
-The JS API will enable clients to make appropriate decisions eg. using more storage vs. making additional requests, requesting appropriate resources from the server etc.
+The JS API will be a convenience for analytics reporting and may be used to make runtime decisions eg. using more storage vs. making additional requests, requesting appropriate resources from the server etc.
 
 ASIDE: the JS API for CPU Cores is already available via hardwareConcurrency API
 
 ### The Header
 Proposed Client Hints Header for memory: `device-ram`\
 `device-ram : <value>`\
-where `<value>` is an approximation the amount of ram in GiB (floating point number). The `<value>` is calculated by using the actual device memory in MiB then rounding it to the smallest nearest number where only the 2 most signicant bits can be set and the rest are zeros (i.e of the binary form `((1|11)0*)`). Then diving that number by 1024.0 to get the value in GiB.
+where `<value>` is an approximation the amount of ram in GiB (floating point number).\
+The `<value>` is calculated by using the actual device memory in MiB then rounding it to the smallest nearest number where only the 2 most signicant bits can be set and the rest are zeros (i.e of the binary form `((1|11)0*)`). Then diving that number by 1024.0 to get the value in GiB.
 
 The following table illustrates some examples:
 
