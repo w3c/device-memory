@@ -26,36 +26,45 @@ Device memory is an especially useful signal for determining “device-class”.
 
 Usage Example {#example}
 ------------------------
-A server would advertise support for `memory` Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute
+A server advertises support for `Memory` client hint using the `Accept-CH` header field, or an equivalent HTML meta element with http-equiv attribute. Optionally, the server can also express a preference for the user agent to persist the opt-in, by using the `Accept-CH-Lifetime` header to communicate the amount of time to remember the opt-in:
 <pre class="highlight">
-    Accept-CH: memory
+    Accept-CH: Memory
+    Accept-CH-Lifetime: 86400
 </pre>
 
+In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the `Memory` request header field:
+<pre class="highlight">
+    GET /example HTTP/1.1
+    Memory: 0.75
+    ...
+</pre>
 
-Memory Client Hint Header {#sec-memory-client-hint-header}
+Memory (Client Hint) Header Field {#sec-memory-client-hint-header}
 =======================================
 
-The Memory header field is a number that indicates the client’s device memory i.e. approximate amount of ram in GiB.
+The Memory header field is a number that indicates the client’s device memory i.e. approximate amount of ram in GiB. The ABNF (Augmented Backus-Naur Form) syntax for the `Memory` header field is as follows:
 
 <pre class="highlight">
-    memory = 1*DIGIT [ "." 1*DIGIT ]
+  Memory         = "Memory" ":" #memory-value
+  memory-value   = 1*DIGIT [ "." 1*DIGIT ]
 </pre>
 
 The value is calculated by using the actual device memory in MiB then rounding it to the smallest nearest number where only the 2 most signicant bits can be set and the rest are zeros (i.e of the binary form ((1|11)0*)). Then diving that number by 1024.0 to get the value in GiB.
 
-If memory occurs in a message more than once, the last value overrides all previous occurrences.
+If Memory header field occurs in a message more than once, the last value overrides all previous occurrences.
+
 
 Examples {#sec-examples}
 =======================================
 
 512 MiB will be reported as:
 <pre class="highlight">
-    memory: 0.5
+    Memory: 0.5
 </pre>
 
 768 MiB will be reported as:
 <pre class="highlight">
-    memory: 0.75
+    Memory: 0.75
 </pre>
 
 A list of all possible values between 0.25Gib and 128GiB is as follow:
@@ -63,8 +72,6 @@ A list of all possible values between 0.25Gib and 128GiB is as follow:
 
 Security Considerations {#sec-security-considerations}
 =======================================
-See <a href="http://httpwg.org/http-extensions/client-hints.html#security-considerations">Security section in Client Hints</a>.
-Requiring per-origin opt-in with Accept-CH restricts when the header is advertised.
-Restricting to a ceiling value (rounded to 2 most signicant bits), as opposed to exact value, reduces fingerprinting risk.
+Device identification and classification (e.g. device type and class) based on advertised User-Agent, and other characteristics of the client, are commonly used to select and provide optimized content. Such solutions frequently rely on commercial device databases, which are costly, hard to integrate, and hard to maintain. This specification defines a mechanism to obtain device memory capability that addresses these technical challenges.
 
-NOTE: Device identification is already possible and rampant today, based on UA string. E.g. https://deviceatlas.com/products/web
+The advertised memory value is restricted to a ceiling value (rounded to 2 most signicant bits) to reduce device fingerpriting, and is subject to <a href="http://httpwg.org/http-extensions/client-hints.html#security-considerations">Security Considerations</a> and recommendations outlined in the Client Hints specification.
