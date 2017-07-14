@@ -54,6 +54,22 @@ The header is sent after an explicit per-origin opt-in via Client Hints mechanis
 For background, [Client Hints](http://httpwg.org/http-extensions/client-hints.html) provides a set of HTTP request header fields, known as Client Hints, to deliver content that is optimized for the device. In that sense using Client Hints is a great fit for this proposal.
 Client Hints recently addressed a [significant limitation in spec](https://github.com/httpwg/http-extensions/issues/306#issuecomment-283549512): opt-in can now be persisted across browser restarts using `max-age` in header.
 
+#### Usage Guidance
+Servers can advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute
+```
+  Accept-CH = memory
+```
+
+The Memory request header field is a number for the client’s device memory i.e. approximate amount of ram in GiB.
+eg. 512 MiB will be reported as:
+```
+    memory: 0.5
+```
+
+Servers can use this header to customize content for low memory device eg. serve light version of the app or a component such as a video player.
+
+NOTE: This header will not be immediately available in all browser. Do not assume presence of the header, and provide a graceful fallback for browsers that don't support the header.
+
 ### The web exposed API
 We propose adding the following API to navigator: `navigator.memory`
 which returns number of GiB of ram (floating point number) rounded down to the nearest power of two (same as the header).
