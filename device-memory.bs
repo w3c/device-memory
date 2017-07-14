@@ -43,6 +43,8 @@ The Memory header field is a number that indicates the client’s device memory 
 
 The value is calculated by using the actual device memory in MiB then rounding it to the smallest nearest number where only the 2 most signicant bits can be set and the rest are zeros (i.e of the binary form ((1|11)0*)). Then diving that number by 1024.0 to get the value in GiB.
 
+If memory occurs in a message more than once, the last value overrides all previous occurrences.
+
 Examples {#sec-examples}
 =======================================
 
