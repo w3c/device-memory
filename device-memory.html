@@ -1218,7 +1218,7 @@ Possible extra rowspan handling
                 content: "Figure " counter(figure) " ";
             }</style>
 <style>/* style-syntax-highlighting */
-
+pre.idl.highlight { color: #708090; }
 .highlight:not(.idl) { background: hsl(24, 20%, 95%); }
 code.highlight { padding: .1em; border-radius: .3em; }
 pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
@@ -1387,7 +1387,7 @@ pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Device Memory</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2017-07-17">17 July 2017</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2017-07-19">19 July 2017</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1428,15 +1428,23 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <ol class="toc">
       <li><a href="#example"><span class="secno">1.1</span> <span class="content">Usage Example</span></a>
      </ol>
-    <li><a href="#sec-memory-client-hint-header"><span class="secno">2</span> <span class="content">Memory (Client Hint) Header Field</span></a>
+    <li><a href="#sec-device-memory-client-hint-header"><span class="secno">2</span> <span class="content">Device Memory (Client Hint) Header Field</span></a>
     <li><a href="#sec-examples"><span class="secno">3</span> <span class="content">Examples</span></a>
-    <li><a href="#sec-security-considerations"><span class="secno">4</span> <span class="content">Security Considerations</span></a>
+    <li><a href="#sec-device-memory-js-api"><span class="secno">4</span> <span class="content">Device Memory JS API</span></a>
+    <li><a href="#sec-security-considerations"><span class="secno">5</span> <span class="content">Security Considerations</span></a>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
+    <li>
+     <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
+     <ol class="toc">
+      <li><a href="#index-defined-here"><span class="secno"></span> <span class="content">Terms defined by this specification</span></a>
+      <li><a href="#index-defined-elsewhere"><span class="secno"></span> <span class="content">Terms defined by reference</span></a>
+     </ol>
     <li>
      <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
      <ol class="toc">
       <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
      </ol>
+    <li><a href="#idl-index"><span class="secno"></span> <span class="content">IDL Index</span></a>
    </ol>
   </nav>
   <main>
@@ -1458,32 +1466,42 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
    </ol>
    <p>Device memory is an especially useful signal for determining “device-class”. Low memory devices devices (under 512MB, 512MB - 1GB) are widely used in emerging markets.</p>
    <h3 class="heading settled" data-level="1.1" id="example"><span class="secno">1.1. </span><span class="content">Usage Example</span><a class="self-link" href="#example"></a></h3>
-    A server advertises support for `Memory` client hint using the `Accept-CH` header field, or an equivalent HTML meta element with http-equiv attribute. Optionally, the server can also express a preference for the user agent to persist the opt-in, by using the `Accept-CH-Lifetime` header to communicate the amount of time to remember the opt-in: 
-<pre class="highlight">Accept<span class="o">-</span>CH<span class="o">:</span> Memory
+    A server advertises support for `Device-Memory` client hint using the `Accept-CH` header field, or an equivalent HTML meta element with http-equiv attribute. Optionally, the server can also express a preference for the user agent to persist the opt-in, by using the `Accept-CH-Lifetime` header to communicate the amount of time to remember the opt-in: 
+<pre class="highlight">Accept<span class="o">-</span>CH<span class="o">:</span> Device<span class="o">-</span>Memory
 Accept<span class="o">-</span>CH<span class="o">-</span>Lifetime<span class="o">:</span> <span class="mi">86400</span>
 </pre>
-   <p>In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the `Memory` request header field:</p>
+   <p>In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the `Device-Memory` request header field:</p>
 <pre class="highlight">GET <span class="o">/</span>example HTTP<span class="o">/</span><span class="mf">1.1</span>
-Memory<span class="o">:</span> <span class="mf">0.75</span>
+Device<span class="o">-</span>Memory<span class="o">:</span> <span class="mf">0.75</span>
 <span class="p">...</span>
 </pre>
-   <h2 class="heading settled" data-level="2" id="sec-memory-client-hint-header"><span class="secno">2. </span><span class="content">Memory (Client Hint) Header Field</span><a class="self-link" href="#sec-memory-client-hint-header"></a></h2>
-   <p>The Memory header field is a number that indicates the client’s device memory i.e. approximate amount of ram in GiB. The ABNF (Augmented Backus-Naur Form) syntax for the `Memory` header field is as follows:</p>
-<pre class="highlight">Memory         <span class="o">=</span> <span class="s2">"Memory"</span> <span class="s2">":"</span> #memory<span class="o">-</span>value
-memory<span class="o">-</span>value   <span class="o">=</span> <span class="mi">1</span><span class="o">*</span>DIGIT <span class="p">[</span> <span class="s2">"."</span> <span class="mi">1</span><span class="o">*</span>DIGIT <span class="p">]</span>
+   <h2 class="heading settled" data-level="2" id="sec-device-memory-client-hint-header"><span class="secno">2. </span><span class="content">Device Memory (Client Hint) Header Field</span><a class="self-link" href="#sec-device-memory-client-hint-header"></a></h2>
+   <p>The Device Memory header field is a number that indicates the client’s total memory on device i.e. approximate amount of ram in GiB. The ABNF (Augmented Backus-Naur Form) syntax for the `Device-Memory` header field is as follows:</p>
+<pre class="highlight">Device<span class="o">-</span>Memory         <span class="o">=</span> <span class="s2">"Device-Memory"</span> <span class="s2">":"</span> #memory<span class="o">-</span>value
+device<span class="o">-</span>memory<span class="o">-</span>value   <span class="o">=</span> <span class="mi">1</span><span class="o">*</span>DIGIT <span class="p">[</span> <span class="s2">"."</span> <span class="mi">1</span><span class="o">*</span>DIGIT <span class="p">]</span>
 </pre>
    <p>The value is calculated by using the actual device memory in MiB then rounding it to the smallest nearest number where only the 2 most signicant bits can be set and the rest are zeros (i.e of the binary form ((1|11)0*)). Then diving that number by 1024.0 to get the value in GiB.</p>
-   <p>If Memory header field occurs in a message more than once, the last value overrides all previous occurrences.</p>
+   <p>If Device Memory header field occurs in a message more than once, the last value overrides all previous occurrences.</p>
    <h2 class="heading settled" data-level="3" id="sec-examples"><span class="secno">3. </span><span class="content">Examples</span><a class="self-link" href="#sec-examples"></a></h2>
    <p>512 MiB will be reported as:</p>
-<pre class="highlight">Memory<span class="o">:</span> <span class="mf">0.5</span>
+<pre class="highlight">Device<span class="o">-</span>Memory<span class="o">:</span> <span class="mf">0.5</span>
 </pre>
    <p>768 MiB will be reported as:</p>
-<pre class="highlight">Memory<span class="o">:</span> <span class="mf">0.75</span>
+<pre class="highlight">Device<span class="o">-</span>Memory<span class="o">:</span> <span class="mf">0.75</span>
 </pre>
    <p>A list of all possible values between 0.25Gib and 128GiB is as follow:
 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128</p>
-   <h2 class="heading settled" data-level="4" id="sec-security-considerations"><span class="secno">4. </span><span class="content">Security Considerations</span><a class="self-link" href="#sec-security-considerations"></a></h2>
+   <h2 class="heading settled" data-level="4" id="sec-device-memory-js-api"><span class="secno">4. </span><span class="content">Device Memory JS API</span><a class="self-link" href="#sec-device-memory-js-api"></a></h2>
+<pre class="def idl highlight">[
+    <a class="nv idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#NoInterfaceObject">NoInterfaceObject</a>,
+    <a class="nv idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed">Exposed</a>=(<span class="n">Window</span>,<span class="n">Worker</span>)
+] <span class="kt">interface</span> <dfn class="nv idl-code" data-dfn-type="interface" data-export="" id="navigatordeviceclass"><code class="highlight">NavigatorDeviceClass</code><a class="self-link" href="#navigatordeviceclass"></a></dfn> {
+    <span class="kt">readonly</span> <span class="kt">attribute</span> <a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double"><span class="kt">double</span></a> <dfn class="nv idl-code" data-dfn-for="NavigatorDeviceClass" data-dfn-type="attribute" data-export="" data-readonly="" data-type="double" id="dom-navigatordeviceclass-devicememory"><code class="highlight">deviceMemory</code><a class="self-link" href="#dom-navigatordeviceclass-devicememory"></a></dfn>;
+};
+</pre>
+   <p class="note" role="note"><span>NOTE:</span> self.navigator.deviceMemory
+        Returns the amount of ram in GiB as described in <a href="#sec-device-memory-client-hint-header">§2 Device Memory (Client Hint) Header Field</a></p>
+   <h2 class="heading settled" data-level="5" id="sec-security-considerations"><span class="secno">5. </span><span class="content">Security Considerations</span><a class="self-link" href="#sec-security-considerations"></a></h2>
     Device identification and classification (e.g. device type and class) based on advertised User-Agent, and other characteristics of the client, are commonly used to select and provide optimized content. Such solutions frequently rely on commercial device databases, which are costly, hard to integrate, and hard to maintain. This specification defines a mechanism to obtain device memory capability that addresses these technical challenges. 
    <p>The advertised memory value is restricted to a ceiling value (rounded to 2 most signicant bits) to reduce device fingerpriting, and is subject to <a href="http://httpwg.org/http-extensions/client-hints.html#security-considerations">Security Considerations</a> and recommendations outlined in the Client Hints specification.</p>
   </main>
@@ -1633,9 +1651,36 @@ memory<span class="o">-</span>value   <span class="o">=</span> <span class="mi">
 
 })();
 </script>
+  <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
+  <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
+  <ul class="index">
+   <li><a href="#dom-navigatordeviceclass-devicememory">deviceMemory</a><span>, in §4</span>
+   <li><a href="#navigatordeviceclass">NavigatorDeviceClass</a><span>, in §4</span>
+  </ul>
+  <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
+  <ul class="index">
+   <li>
+    <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
+    <ul>
+     <li><a href="https://heycam.github.io/webidl/#Exposed">Exposed</a>
+     <li><a href="https://heycam.github.io/webidl/#NoInterfaceObject">NoInterfaceObject</a>
+     <li><a href="https://heycam.github.io/webidl/#idl-double">double</a>
+    </ul>
+  </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
+   <dt id="biblio-webidl">[WebIDL]
+   <dd>Cameron McCormack; Boris Zbarsky; Tobie Langel. <a href="https://heycam.github.io/webidl/">Web IDL</a>. URL: <a href="https://heycam.github.io/webidl/">https://heycam.github.io/webidl/</a>
   </dl>
+  <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
+<pre class="idl highlight def">[
+    <a class="nv idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#NoInterfaceObject">NoInterfaceObject</a>,
+    <a class="nv idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed">Exposed</a>=(<span class="n">Window</span>,<span class="n">Worker</span>)
+] <span class="kt">interface</span> <a class="nv" href="#navigatordeviceclass"><code class="highlight">NavigatorDeviceClass</code></a> {
+    <span class="kt">readonly</span> <span class="kt">attribute</span> <a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double"><span class="kt">double</span></a> <a class="nv" data-readonly="" data-type="double" href="#dom-navigatordeviceclass-devicememory"><code class="highlight">deviceMemory</code></a>;
+};
+
+</pre>
