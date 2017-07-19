@@ -22,8 +22,8 @@ The JS API will be a convenience for analytics reporting and may be used to make
 ASIDE: the JS API for CPU Cores is already available via hardwareConcurrency API
 
 ### The Header
-Proposed Client Hints Header for memory: `memory`\
-`memory : <value>`\
+Proposed Client Hints Header for memory: `Device-Memory`\
+`Device-Memory : <value>`\
 where `<value>` is an approximation the amount of ram in GiB (floating point number).\
 The `<value>` is calculated by using the actual device memory in MiB then rounding it to the smallest nearest number where only the 2 most signicant bits can be set and the rest are zeros (i.e of the binary form `((1|11)0*)`). Then diving that number by 1024.0 to get the value in GiB.
 
@@ -49,7 +49,7 @@ HTTP caching doesn't deal well with mixed value headers, therefore separate head
 
 #### When is the header sent? 
 Client Hints cannot be used to enable providing network performance data on the first request, however this is being actively addressed with [this proposal](https://github.com/httpwg/http-extensions/issues/306#issuecomment-283549512).
-The header is sent after an explicit per-origin opt-in via Client Hints mechanism. The following new hint will be added: `Accept-CH: memory`
+The header is sent after an explicit per-origin opt-in via Client Hints mechanism. The following new hint will be added: `Accept-CH: Device-Memory`
 
 For background, [Client Hints](http://httpwg.org/http-extensions/client-hints.html) provides a set of HTTP request header fields, known as Client Hints, to deliver content that is optimized for the device. In that sense using Client Hints is a great fit for this proposal.
 Client Hints recently addressed a [significant limitation in spec](https://github.com/httpwg/http-extensions/issues/306#issuecomment-283549512): opt-in can now be persisted across browser restarts using `max-age` in header.
@@ -57,13 +57,13 @@ Client Hints recently addressed a [significant limitation in spec](https://githu
 #### Usage Guidance
 Servers can advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute
 ```
-  Accept-CH = memory
+  Accept-CH = Device-Memory
 ```
 
 The Memory request header field is a number for the client’s device memory i.e. approximate amount of ram in GiB.
 eg. 512 MiB will be reported as:
 ```
-    memory: 0.5
+    Device-Memory: 0.5
 ```
 
 Servers can use this header to customize content for low memory device eg. serve light version of the app or a component such as a video player.
@@ -71,7 +71,7 @@ Servers can use this header to customize content for low memory device eg. serve
 NOTE: This header will not be immediately available in all browser. Do not assume presence of the header, and provide a graceful fallback for browsers that don't support the header.
 
 ### The web exposed API
-We propose adding the following API to navigator: `navigator.memory`
+We propose adding the following API to navigator: `navigator.deviceMemory`
 which returns number of GiB of ram (floating point number) rounded down to the nearest power of two (same as the header).
 
 ## Why not surface Device Class directly?
