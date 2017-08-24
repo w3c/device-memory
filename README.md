@@ -79,6 +79,8 @@ While exposing a composite “Device Class” would be useful for developers, it
 While this is something worth considering down the road, we think we can get most of the benefit by exposing a couple of specific signals device memory and device CPU cores. In particular device memory is a reasonable proxy for device class.
 
 ## Security & Privacy
+The client hint header and API will only be available on HTTPS secure connections.
+
 See [Security section in Client Hints](http://httpwg.org/http-extensions/client-hints.html#security-considerations).
 Requiring per-origin opt-in with Accept-CH restricts when the header is advertised.
 Restricting to a ceiling value (rounded to 2 most signicant bits), as opposed to exact value, reduces fingerprinting risk. 
