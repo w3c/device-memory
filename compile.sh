@@ -5,5 +5,5 @@ bikeshed spec
 
 if [ -d out ]; then
   echo Copy the generated spec into out/index.html
-  cp device-memory.html out/index.html
+  cp index.html out/index.html
 fi
