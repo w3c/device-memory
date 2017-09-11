@@ -5,6 +5,7 @@ Level: 1
 URL: https://w3c.github.io/device-memory/
 Group: webperf
 Status: ED
+TR: https://www.w3.org/TR/device-memory/
 Editor: Shubhie Panicker, Google https://google.com, panicker@google.com
 Repository: w3c/device-memory
 Abstract: This document defines a HTTP Client Hint header to surface device capability for memory i.e. device RAM, in order to enable web apps to customize content depending on device memory constraints.
