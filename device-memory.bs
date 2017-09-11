@@ -91,3 +91,10 @@ Device-Memory Client Hint header and JS API will only be available to HTTPS secu
 Device identification and classification (e.g. device type and class) based on advertised User-Agent, and other characteristics of the client, are commonly used to select and provide optimized content. Such solutions frequently rely on commercial device databases, which are costly, hard to integrate, and hard to maintain. This specification defines a mechanism to obtain device memory capability that addresses these technical challenges.
 
 The advertised memory value is restricted to a ceiling value (rounded to 2 most signicant bits) to reduce device fingerpriting, and is subject to <a href="http://httpwg.org/http-extensions/client-hints.html#security-considerations">Security Considerations</a> and recommendations outlined in the Client Hints specification.
+
+<!-- ============================================================ -->
+<h2 id=acknowledgements>Acknowledgements</h2>
+<!-- ============================================================ -->
+
+Special thanks to <a href="https://github.com/w3c/device-memory/graphs/contributors">all the contributors</a> for their technical input and suggestions that led to improvements to this
+specification.
