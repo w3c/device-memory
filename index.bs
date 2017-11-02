@@ -35,7 +35,7 @@ A server advertises support for `Device-Memory` client hint using the `Accept-CH
 In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the `Device-Memory` request header field:
 <pre class="highlight">
     GET /example HTTP/1.1
-    Device-Memory: 0.75
+    Device-Memory: 0.5
     ...
 </pre>
 
@@ -50,7 +50,11 @@ The Device Memory header field is a number that indicates the client’s device 
 </pre>
 
 <h3 dfn>Computing Device Memory Value</h3>
-The value is calculated by using the actual device memory in MiB then rounding it to the smallest nearest number where only the 2 most signicant bits can be set and the rest are zeros (i.e of the binary form ((1|11)0*)). Then diving that number by 1024.0 to get the value in GiB.
+The value is calculated by using the actual device memory in MiB then rounding rounding it to the nearest number where only the most signicant bit can be set and the rest are zeros (nearest power of two). Then dividng that number by 1024.0 to get the value in GiB.
+
+An upper bound and a lower bound should be set on the list of values.
+
+    NOTE: While implementations may choose different values, the recommended upper bound is 8GiB and the recommended lower bound is 0.25GiB (or 256MiB).
 
 If Device-Memory header field occurs in a message more than once, the last value overrides all previous occurrences.
 
@@ -62,13 +66,13 @@ If Device-Memory header field occurs in a message more than once, the last value
     Device-Memory: 0.5
 </pre>
 
-768 MiB will be reported as:
+1000 MiB will be reported as:
 <pre class="highlight">
-    Device-Memory: 0.75
+    Device-Memory: 1
 </pre>
 
-A list of all possible values between 0.25Gib and 128GiB is as follow:
-0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128
+A full list of possible values is as follows: 0.25, 0.5, 1, 2, 4, 8
+
 
 
 Device Memory JS API {#sec-device-memory-js-api}
