@@ -24,8 +24,10 @@ ASIDE: the JS API for CPU Cores is already available via hardwareConcurrency API
 ### The Header
 Proposed Client Hints Header for memory: `Device-Memory`\
 `Device-Memory : <value>`\
-where `<value>` is an approximation the amount of ram in GiB (floating point number).\
-The `<value>` is calculated by using the actual device memory in MiB then rounding it to the smallest nearest number where only the 2 most signicant bits can be set and the rest are zeros (i.e of the binary form `((1|11)0*)`). Then diving that number by 1024.0 to get the value in GiB.
+where `<value>` is an approximation of the amount of ram in GiB (floating point number).\
+The `<value>` is calculated by using the actual device memory in MiB then rounding it to the nearest number where only the most signicant bit can be set and the rest are zeros (nearest power of two). Then diving that number by 1024.0 to get the value in GiB.
+An upper bound and a lower bound should be set on the list of values.
+While implementations may choose different values, the recommended upper bound is 8GiB and the recommended lower bound is 0.25GiB (or 256MiB).
 
 The following table illustrates some examples:
 
@@ -33,16 +35,12 @@ The following table illustrates some examples:
 |---------------|----------------|-----------------|
 | 500           | 512            | 0.5             |
 | 512           | 512            | 0.5             |
-| 768           | 768            | 0.75            |
+| 768           | 512            | 0.5             |
 | 1000          | 1024           | 1               |
-| 1500          | 1536           | 1.5             |
-| 1792          | 1536           | 1.5             |
 | 1793          | 2048           | 2               |
 
-
-A conclusive list of all possible values between 0.25Gib and 128GiB is as follow:
-
-0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128
+A full list of possible values is as follows:
+0.25, 0.5, 1, 2, 4, 8
 
 #### Why separate header and rounding?
 HTTP caching doesn't deal well with mixed value headers, therefore separate headers are recommended. Also, rounding down to power of two enables caching and mitigates fingerprinting.
