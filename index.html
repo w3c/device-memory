@@ -7,7 +7,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2016/W3C-ED" rel="stylesheet" type="text/css">
   <meta content="Bikeshed version 4679d5ca787d737883d9c905dd138257fc2cec85" name="generator">
   <link href="https://www.w3.org/TR/device-memory/" rel="canonical">
-  <meta content="0edbc09947d7d3b27cb49cafa43d2042e04f6c2a" name="document-revision">
+  <meta content="1439785e8c6458c34ce9569451082bc2edf59e4d" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -380,7 +380,7 @@ memory<span class="o">-</span>value   <span class="o">=</span> <span class="mi">
    <h2 class="heading settled" data-level="4" id="sec-security-considerations"><span class="secno">4. </span><span class="content">Security Considerations</span><a class="self-link" href="#sec-security-considerations"></a></h2>
     Device-Memory Client Hint header and JS API will only be available to HTTPS secure contexts. 
    <p>Device identification and classification (e.g. device type and class) based on advertised User-Agent, and other characteristics of the client, are commonly used to select and provide optimized content. Such solutions frequently rely on commercial device databases, which are costly, hard to integrate, and hard to maintain. This specification defines a mechanism to obtain device memory capability that addresses these technical challenges.</p>
-   <p>The advertised memory value is restricted to a ceiling value (rounded to 2 most signicant bits) to reduce device fingerpriting, and is subject to <a href="http://httpwg.org/http-extensions/client-hints.html#security-considerations">Security Considerations</a> and recommendations outlined in the Client Hints specification.</p>
+   <p>To reduce fingerprinting risk, reported value is rounded to single most significant bit, as opposed to reporting the exact value. In addition, an upper and lower bound is placed on the reported values.</p>
    <h2 class="heading settled" data-level="5" id="acknowledgements"><span class="secno">5. </span><span class="content">Acknowledgements</span><a class="self-link" href="#acknowledgements"></a></h2>
    <p>Special thanks to <a href="https://github.com/w3c/device-memory/graphs/contributors">all the contributors</a> for their technical input and suggestions that led to improvements to this
 specification.</p>
