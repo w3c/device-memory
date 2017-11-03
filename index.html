@@ -5,9 +5,9 @@
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <meta content="ED" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2016/W3C-ED" rel="stylesheet" type="text/css">
-  <meta content="Bikeshed version 4679d5ca787d737883d9c905dd138257fc2cec85" name="generator">
+  <meta content="Bikeshed version 67155cabad72a8ab669a7d4421c90e2999a29b68" name="generator">
   <link href="https://www.w3.org/TR/device-memory/" rel="canonical">
-  <meta content="bb62754ace7f0238a4b665e59e040f7888765958" name="document-revision">
+  <meta content="6f7f4e9dcd72eb859b3a2c28ad642995a70ec36d" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -355,7 +355,7 @@ Device<span class="o">-</span>Memory<span class="o">:</span> <span class="mf">0.
 memory<span class="o">-</span>value   <span class="o">=</span> <span class="mi">1</span><span class="o">*</span>DIGIT <span class="p">[</span> <span class="s2">"."</span> <span class="mi">1</span><span class="o">*</span>DIGIT <span class="p">]</span>
 </pre>
    <h3 class="heading settled dfn-paneled" data-dfn-type="dfn" data-level="2.1" data-lt="Computing Device Memory Value" data-noexport="" id="computing-device-memory-value"><span class="secno">2.1. </span><span class="content">Computing Device Memory Value</span></h3>
-    The value is calculated by using the actual device memory in MiB then rounding rounding it to the nearest number where only the most signicant bit can be set and the rest are zeros (nearest power of two). Then dividng that number by 1024.0 to get the value in GiB. 
+    The value is calculated by using the actual device memory in MiB then rounding it to the nearest number where only the most signicant bit can be set and the rest are zeros (nearest power of two). Then dividng that number by 1024.0 to get the value in GiB. 
    <p>An upper bound and a lower bound should be set on the list of values.</p>
    <p class="note" role="note"><span>NOTE:</span> While implementations may choose different values, the recommended upper bound is 8GiB and the recommended lower bound is 0.25GiB (or 256MiB).</p>
    <p>If Device-Memory header field occurs in a message more than once, the last value overrides all previous occurrences.</p>
