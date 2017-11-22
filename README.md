@@ -28,6 +28,7 @@ where `<value>` is an approximation of the amount of RAM in GiB (floating point 
 The `<value>` is calculated by using the actual device memory in MiB then rounding it to the nearest number where only the most significant bit can be set and the rest are zeros (nearest power of two). Then dividing that number by 1024.0 to get the value in GiB.
 
 An upper bound and a lower bound should be set on the list of values. While implementations may choose different values, the recommended upper bound is 8GiB and the recommended lower bound is 0.25GiB (or 256MiB).
+The upper and lower bounds are not explicit, as they are subject to change over time.
 
 The following table illustrates some examples:
 
