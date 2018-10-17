@@ -1,5 +1,8 @@
- {
-    "group":      ["45211"]
-,   "contacts":   ["plehegar"]
-,   "shortName":  "device-memory"
+{
+  "group": 45211,
+  "contacts": [
+    "plehegar"
+  ],
+  "shortName": "device-memory",
+  "repo-type": "rec-track"
 }
