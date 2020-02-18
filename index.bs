@@ -81,7 +81,7 @@ Device Memory JS API {#sec-device-memory-js-api}
 [
     SecureContext,
     Exposed=(Window,Worker)
-] interface mixin NavigatorDeviceClass {
+] interface mixin NavigatorDeviceMemory {
     readonly attribute double deviceMemory;
 };
 
