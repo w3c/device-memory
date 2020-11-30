@@ -28,6 +28,7 @@ Default Highlight: js
     "authors": [ "Mark Nottingham", "Poul-Henning Kamp" ],
     "href": "https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html",
     "title": "Structured Field Values for HTTP",
+
     "status": "ID",
     "publisher": "IETF HTTP-WG"
   }
@@ -36,10 +37,11 @@ Default Highlight: js
 <pre class="anchors">
 urlPrefix: https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html; spec: I-D.ietf-httpbis-header-structure
     type: dfn
-        text: structured field value; url: #
-    for: structured field value
+        text: structured header value; url: #
+    for: structured header value
         type: dfn
             text: decimal; url: #name-decimals
+            text: item; url: #name-items
 </pre>
  
 Introduction {#intro}
@@ -72,7 +74,7 @@ Device Memory (Client Hint) Header Field {#sec-device-memory-client-hint-header}
 =======================================
 
 The Device Memory header field is a [[CLIENT-HINTS]] header.
-It represents a [=decimal=] [=structured field value=] that indicates the client’s device memory, i.e. the approximate amount of RAM in GiB.
+It is a [=structured header value=] containing an [=item=] which value is a [=decimal=] that indicates the client’s device memory, i.e. the approximate amount of RAM in GiB.
 The ABNF (Augmented Backus-Naur Form) syntax for the `Device-Memory` header field is as follows:
 
 ~~~ abnf
