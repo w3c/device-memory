@@ -17,4 +17,4 @@ jobs:
           W3C_ECHIDNA_TOKEN: ${{ secrets.ECHIDNA_TOKEN }}
           W3C_WG_DECISION_URL: https://lists.w3.org/Archives/Public/public-web-perf/2021Apr/0005.html
           W3C_BUILD_OVERRIDE: |
-            specStatus: WD
+            Status: WD
