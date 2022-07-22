@@ -9,6 +9,7 @@ TR: https://www.w3.org/TR/device-memory/
 Editor: Shubhie Panicker, Google https://google.com, panicker@google.com, w3cid 92587
 Repository: w3c/device-memory
 Abstract: This document defines a HTTP Client Hint header to surface device capability for memory i.e. device RAM, in order to enable web apps to customize content depending on device memory constraints.
+Required IDs: sec-device-memory-client-hint-header
 Default Highlight: js
 </pre>
 
@@ -84,7 +85,7 @@ The ABNF (Augmented Backus-Naur Form) syntax for the `Device-Memory` header fiel
 <h3 dfn>Computing Device Memory Value</h3>
 The value is calculated by using the actual device memory in MiB then rounding it to the nearest number where only the most signicant bit can be set and the rest are zeros (nearest power of two). Then dividing that number by 1024.0 to get the value in GiB.
 
-An upper bound and a lower bound SHOULD be set on the list of values.
+An upper bound and a lower bound should be set on the list of values.
 
     NOTE: While implementations may choose different values, the recommended upper bound is 8GiB and the recommended lower bound is 0.25GiB (or 256MiB).
 
@@ -103,7 +104,7 @@ If Device-Memory header field occurs in a message more than once, the last value
     Device-Memory: 1
 </pre>
 
-A full list of possible values SHOULD be as follows: 0.25, 0.5, 1, 2, 4, 8
+A full list of possible values should be as follows: 0.25, 0.5, 1, 2, 4, 8
 
 
 
@@ -133,19 +134,25 @@ To reduce fingerprinting risk, reported value is rounded to single most signific
 
 IANA considerations {#iana}
 ===================
-This document defines the `Device-Memory` HTTP request header field, and register them in the permanent message header field registery ([[RFC3864]]).
+This document defines the `Device-Memory` HTTP request header field, and registers them in the permanent message header field registery ([[RFC3864]]).
 
 Device-Memory Header field {#iana-device-memory}
 ---------------------------------
-Header field name: Device-Memory
 
-Applicable protocol: http
+: Header field name
+:: Device-Memory
 
-Status: standard
+: Applicable protocol
+:: http
 
-Author/Change controller: IETF
+: Status
+:: standard
 
-Specification document: this specification ([[#sec-device-memory-client-hint-header]])
+: Author/Change controller
+:: IETF
+
+: Specification document
+:: this specification ([[#sec-device-memory-client-hint-header]])
 
 <!-- ============================================================ -->
 <h2 id=acknowledgements>Acknowledgements</h2>
