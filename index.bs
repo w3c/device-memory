@@ -40,7 +40,7 @@ Device memory is an especially useful signal for determining “device-class”.
 
 Usage Example {#example}
 ------------------------
-A server opts-in to receive a <code>Sec-CH-Device-Memory</code> [=HTTP Client Hint=] using the <code>Accept-CH</code> header field, or an equivalent HTML meta element with http-equiv attribute:
+A server opts in to receive a <code>Sec-CH-Device-Memory</code> [=HTTP Client Hint=] using the <code>Accept-CH</code> header field, or an equivalent HTML meta element with http-equiv attribute:
 
 <pre class="highlight lang-http">
     Accept-CH: Sec-CH-Device-Memory
