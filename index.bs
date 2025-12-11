@@ -1,54 +1,35 @@
 <pre class='metadata'>
-Title: Device Memory
+Title: Device Memory API
 Shortname: device-memory
 Level: 1
 Group: webperf
 Status: ED
 ED: https://www.w3.org/TR/device-memory/
 TR: https://www.w3.org/TR/device-memory/
-Editor: Shubhie Panicker, Google https://google.com, panicker@google.com, w3cid 92587
+Editor: Barry Pollard, Google https://google.com, barrypollard@google.com, w3cid 138839
+Former Editor: Shubhie Panicker, Google https://google.com
 Repository: w3c/device-memory
-Abstract: This document defines a HTTP Client Hint header to surface device capability for memory i.e. device RAM, in order to enable web apps to customize content depending on device memory constraints.
+Abstract: This document defines a HTTP Client Hint header and a JavaScript API to surface device capability for memory i.e. device RAM, in order to enable web apps to customize content depending on device memory constraints.
 Required IDs: sec-device-memory-client-hint-header
 Default Highlight: js
 </pre>
 
-<pre class=biblio>
-{
-  "CLIENT-HINTS": {
-    "authors": [
-        "Ilya Grigorik",
-        "Yoav Weiss"
-      ],
-    "href": "https://httpwg.org/http-extensions/client-hints.html",
-    "publisher": "IETF HTTP-WG",
-    "title": "Client Hints",
-    "status": "ID"
-  },
-  "I-D.ietf-httpbis-header-structure": {
-    "authors": [ "Mark Nottingham", "Poul-Henning Kamp" ],
-    "href": "https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html",
-    "title": "Structured Field Values for HTTP",
-
-    "status": "ID",
-    "publisher": "IETF HTTP-WG"
-  }
-}
-</pre>
 <pre class="anchors">
-urlPrefix: https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html; spec: I-D.ietf-httpbis-header-structure
+urlPrefix: https://datatracker.ietf.org/doc/html/rfc8941; spec: rfc8941
     type: dfn
-        text: structured header value; url: #
-    for: structured header value
-        type: dfn
-            text: decimal; url: #name-decimals
-            text: item; url: #name-items
+        text: structured header value; url: #name-introduction
+    type: dfn
+        text: decimal; url: #name-decimals
+        text: item; url: #name-items
+urlPrefix: https://datatracker.ietf.org/doc/html/rfc8941; spec: rfc8942
+    type: dfn
+        text: HTTP Client Hint; url: #name-introduction
 </pre>
  
 Introduction {#intro}
 =====================
 Developers need device-class signal for:
-1. Serving light version of the site or specific components, for low-end devices. Egs:
+1. Serving light version of the site or specific components, for low-end devices. Examples:
     * Serve Google "search lite" - a 10KB search results page used in EM.
     * Serve a light version of video player in Facebook.
     * Serve lightweight tile images in Google Maps.
@@ -59,54 +40,57 @@ Device memory is an especially useful signal for determining “device-class”.
 
 Usage Example {#example}
 ------------------------
-A server opts-in to receive a `Sec-CH-Device-Memory` client hint [[!CLIENT-HINTS]] using the `Accept-CH` header field, or an equivalent HTML meta element with http-equiv attribute:
-<pre class="highlight">
+A server opts in to receive a <code>Sec-CH-Device-Memory</code> [=HTTP Client Hint=] using the <code>Accept-CH</code> header field, or an equivalent HTML meta element with http-equiv attribute:
+
+<pre class="highlight lang-http">
     Accept-CH: Sec-CH-Device-Memory
 </pre>
 
-In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the `Sec-CH-Device-Memory` request header field:
-<pre class="highlight">
+In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the <code>Sec-CH-Device-Memory</code> request header field:
+
+<pre class="highlight lang-http">
     GET /example HTTP/1.1
     Sec-CH-Device-Memory: 0.5
     ...
 </pre>
 
-Device Memory (Client Hint) Header Field {#sec-device-memory-client-hint-header}
+<code>Sec-CH-Device-Memory</code> (Client Hint) Header Field {#sec-device-memory-client-hint-header}
 =======================================
 
-The Device Memory header field is a [[CLIENT-HINTS]] header.
+The <code>Sec-CH-Device-Memory</code> header field is a [=HTTP Client Hint=] header.
 It is a [=structured header value=] containing an [=item=] which value is a [=decimal=] that indicates the client’s device memory, i.e. the approximate amount of RAM in GiB.
-The ABNF (Augmented Backus-Naur Form) syntax for the `Sec-CH-Device-Memory` header field is as follows:
+
+The ABNF (Augmented Backus-Naur Form) syntax for the <code>Sec-CH-Device-Memory</code> header field is as follows:
 
 ~~~ abnf
   Sec-CH-Device-Memory = sf-decimal
 ~~~
 
 <h3 dfn>Computing Device Memory Value</h3>
-The value is calculated by using the actual device memory in MiB then rounding it to the nearest number where only the most signicant bit can be set and the rest are zeros (nearest power of two). Then dividing that number by 1024.0 to get the value in GiB.
+The value is calculated by using the actual device memory in MiB then rounding it to the nearest number where only the most significant bit can be set and the rest are zeros (nearest power of two). Then dividing that number by 1024.0 to get the value in GiB.
 
 An upper bound and a lower bound should be set on the list of values.
 
     NOTE: While implementations may choose different values, the recommended upper bound is 8GiB and the recommended lower bound is 0.25GiB (or 256MiB).
 
-If `Sec-CH-Device-Memory` header field occurs in a message more than once, the last value overrides all previous occurrences.
+If <code>Sec-CH-Device-Memory</code> header field occurs in a message more than once, the last value overrides all previous occurrences.
 
 
 <h3 dfn>Examples</h3>
 
 512 MiB will be reported as:
-<pre class="highlight">
+
+<pre class="highlight lang-http">
     Sec-CH-Device-Memory: 0.5
 </pre>
 
 1000 MiB will be reported as:
-<pre class="highlight">
+
+<pre class="highlight lang-http">
     Sec-CH-Device-Memory: 1
 </pre>
 
 A full list of possible values should be as follows: 0.25, 0.5, 1, 2, 4, 8
-
-
 
 Device Memory JS API {#sec-device-memory-js-api}
 =======================================
@@ -122,11 +106,12 @@ Navigator includes NavigatorDeviceMemory;
 WorkerNavigator includes NavigatorDeviceMemory;
 </pre>
 
-    NOTE: self.navigator.deviceMemory Returns the amount of ram in GiB as described in [[#computing-device-memory-value]]
+    NOTE: <code>self.navigator.deviceMemory</code> Returns the amount of ram in GiB as described in [[#computing-device-memory-value]]
 
 Security Considerations {#sec-security-considerations}
 =======================================
-`Sec-CH-Device-Memory` Client Hint header and JS API will only be available to HTTPS secure contexts.  
+
+<code>Sec-CH-Device-Memory</code> Client Hint header and JS API will only be available to HTTPS secure contexts.  
 
 Device identification and classification (e.g. device type and class) based on advertised User-Agent, and other characteristics of the client, are commonly used to select and provide optimized content. Such solutions frequently rely on commercial device databases, which are costly, hard to integrate, and hard to maintain. This specification defines a mechanism to obtain device memory capability that addresses these technical challenges.
 
@@ -134,7 +119,8 @@ To reduce fingerprinting risk, reported value is rounded to single most signific
 
 IANA considerations {#iana}
 ===================
-This document defines the `Sec-CH-Device-Memory` HTTP request header field, and registers them in the permanent message header field registery ([[RFC3864]]).
+
+This document defines the <code>Sec-CH-Device-Memory</code> HTTP request header field, and registers them in the permanent message header field registry ([[RFC3864]]).
 
 Sec-CH-Device-Memory Header field {#iana-device-memory}
 ---------------------------------
