@@ -59,15 +59,15 @@ Device memory is an especially useful signal for determining “device-class”.
 
 Usage Example {#example}
 ------------------------
-A server opts-in to receive a `Device-Memory` client hint [[!CLIENT-HINTS]] using the `Accept-CH` header field, or an equivalent HTML meta element with http-equiv attribute:
+A server opts-in to receive a `Sec-CH-Device-Memory` client hint [[!CLIENT-HINTS]] using the `Accept-CH` header field, or an equivalent HTML meta element with http-equiv attribute:
 <pre class="highlight">
-    Accept-CH: Device-Memory
+    Accept-CH: Sec-CH-Device-Memory
 </pre>
 
-In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the `Device-Memory` request header field:
+In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the `Sec-CH-Device-Memory` request header field:
 <pre class="highlight">
     GET /example HTTP/1.1
-    Device-Memory: 0.5
+    Sec-CH-Device-Memory: 0.5
     ...
 </pre>
 
@@ -76,10 +76,10 @@ Device Memory (Client Hint) Header Field {#sec-device-memory-client-hint-header}
 
 The Device Memory header field is a [[CLIENT-HINTS]] header.
 It is a [=structured header value=] containing an [=item=] which value is a [=decimal=] that indicates the client’s device memory, i.e. the approximate amount of RAM in GiB.
-The ABNF (Augmented Backus-Naur Form) syntax for the `Device-Memory` header field is as follows:
+The ABNF (Augmented Backus-Naur Form) syntax for the `Sec-CH-Device-Memory` header field is as follows:
 
 ~~~ abnf
-  Device-Memory = sf-decimal
+  Sec-CH-Device-Memory = sf-decimal
 ~~~
 
 <h3 dfn>Computing Device Memory Value</h3>
@@ -89,19 +89,19 @@ An upper bound and a lower bound should be set on the list of values.
 
     NOTE: While implementations may choose different values, the recommended upper bound is 8GiB and the recommended lower bound is 0.25GiB (or 256MiB).
 
-If Device-Memory header field occurs in a message more than once, the last value overrides all previous occurrences.
+If `Sec-CH-Device-Memory` header field occurs in a message more than once, the last value overrides all previous occurrences.
 
 
 <h3 dfn>Examples</h3>
 
 512 MiB will be reported as:
 <pre class="highlight">
-    Device-Memory: 0.5
+    Sec-CH-Device-Memory: 0.5
 </pre>
 
 1000 MiB will be reported as:
 <pre class="highlight">
-    Device-Memory: 1
+    Sec-CH-Device-Memory: 1
 </pre>
 
 A full list of possible values should be as follows: 0.25, 0.5, 1, 2, 4, 8
@@ -126,7 +126,7 @@ WorkerNavigator includes NavigatorDeviceMemory;
 
 Security Considerations {#sec-security-considerations}
 =======================================
-Device-Memory Client Hint header and JS API will only be available to HTTPS secure contexts.  
+`Sec-CH-Device-Memory` Client Hint header and JS API will only be available to HTTPS secure contexts.  
 
 Device identification and classification (e.g. device type and class) based on advertised User-Agent, and other characteristics of the client, are commonly used to select and provide optimized content. Such solutions frequently rely on commercial device databases, which are costly, hard to integrate, and hard to maintain. This specification defines a mechanism to obtain device memory capability that addresses these technical challenges.
 
@@ -134,13 +134,13 @@ To reduce fingerprinting risk, reported value is rounded to single most signific
 
 IANA considerations {#iana}
 ===================
-This document defines the `Device-Memory` HTTP request header field, and registers them in the permanent message header field registery ([[RFC3864]]).
+This document defines the `Sec-CH-Device-Memory` HTTP request header field, and registers them in the permanent message header field registery ([[RFC3864]]).
 
-Device-Memory Header field {#iana-device-memory}
+Sec-CH-Device-Memory Header field {#iana-device-memory}
 ---------------------------------
 
 : Header field name
-:: Device-Memory
+:: Sec-CH-Device-Memory
 
 : Applicable protocol
 :: http
