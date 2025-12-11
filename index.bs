@@ -14,36 +14,16 @@ Required IDs: sec-device-memory-client-hint-header
 Default Highlight: js
 </pre>
 
-<pre class=biblio>
-{
-  "CLIENT-HINTS": {
-    "authors": [
-        "Ilya Grigorik",
-        "Yoav Weiss"
-      ],
-    "href": "https://www.rfc-editor.org/rfc/rfc8942",
-    "publisher": "IETF HTTP-WG",
-    "title": "Client Hints",
-    "status": "ID"
-  },
-  "I-D.ietf-httpbis-header-structure": {
-    "authors": [ "Mark Nottingham", "Poul-Henning Kamp" ],
-    "href": "https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-header-structure",
-    "title": "Structured Field Values for HTTP",
-
-    "status": "ID",
-    "publisher": "IETF HTTP-WG"
-  }
-}
-</pre>
 <pre class="anchors">
-urlPrefix: https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-header-structure; spec: I-D.ietf-httpbis-header-structure
+urlPrefix: https://datatracker.ietf.org/doc/html/rfc8941; spec: rfc8941
     type: dfn
-        text: structured header value; url: #
-    for: structured header value
-        type: dfn
-            text: decimal; url: #name-decimals
-            text: item; url: #name-items
+        text: structured header value; url: #name-introduction
+    type: dfn
+        text: decimal; url: #name-decimals
+        text: item; url: #name-items
+urlPrefix: https://datatracker.ietf.org/doc/html/rfc8941; spec: rfc8942
+    type: dfn
+        text: HTTP Client Hint; url: #name-introduction
 </pre>
  
 Introduction {#intro}
@@ -60,7 +40,7 @@ Device memory is an especially useful signal for determining “device-class”.
 
 Usage Example {#example}
 ------------------------
-A server opts-in to receive a <code>Sec-CH-Device-Memory</code> client hint [[!CLIENT-HINTS]] using the <code>Accept-CH</code> header field, or an equivalent HTML meta element with http-equiv attribute:
+A server opts-in to receive a <code>Sec-CH-Device-Memory</code> [=HTTP Client Hint=] using the <code>Accept-CH</code> header field, or an equivalent HTML meta element with http-equiv attribute:
 
 <pre class="highlight lang-http">
     Accept-CH: Sec-CH-Device-Memory
@@ -77,7 +57,7 @@ In turn, on receiving the above preferences from the server, a compatible user a
 <code>Sec-CH-Device-Memory</code> (Client Hint) Header Field {#sec-device-memory-client-hint-header}
 =======================================
 
-The <code>Sec-CH-Device-Memory</code> header field is a [[CLIENT-HINTS]] header.
+The <code>Sec-CH-Device-Memory</code> header field is a [=HTTP Client Hint=] header.
 It is a [=structured header value=] containing an [=item=] which value is a [=decimal=] that indicates the client’s device memory, i.e. the approximate amount of RAM in GiB.
 
 The ABNF (Augmented Backus-Naur Form) syntax for the <code>Sec-CH-Device-Memory</code> header field is as follows:
