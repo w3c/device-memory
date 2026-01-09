@@ -27,8 +27,7 @@ Proposed Client Hints Header for memory: `Sec-CH-Device-Memory`\
 where `<value>` is an approximation of the amount of RAM in GiB (floating point number).\
 The `<value>` is calculated by using the actual device memory in MiB then rounding it to the nearest number where only the most significant bit can be set and the rest are zeros (nearest power of two). Then dividing that number by 1024.0 to get the value in GiB.
 
-An upper bound and a lower bound should be set on the list of values. While implementations may choose different values, the recommended upper bound is 8GiB and the recommended lower bound is 0.25GiB (or 256MiB).
-The upper and lower bounds are not explicit, as they are subject to change over time.
+An upper bound and a lower bound should be set on the list of values so the fingerprinting is mitigated. The Implementations may set upper and lower bounds and adjust them dynamically over time. These bounds may even differ on different device types, or across various geographic regions.
 
 The following table illustrates some examples:
 
@@ -39,9 +38,6 @@ The following table illustrates some examples:
 | 768           | 512            | 0.5             |
 | 1000          | 1024           | 1               |
 | 1793          | 2048           | 2               |
-
-A full list of possible values is as follows:
-0.25, 0.5, 1, 2, 4, 8
 
 #### Why separate header and rounding?
 HTTP caching doesn't deal well with mixed value headers, therefore separate headers are recommended. Also, rounding down to power of two enables caching and mitigates fingerprinting.
