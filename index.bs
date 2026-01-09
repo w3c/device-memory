@@ -7,6 +7,7 @@ Status: ED
 ED: https://www.w3.org/TR/device-memory/
 TR: https://www.w3.org/TR/device-memory/
 Editor: Barry Pollard, Google https://google.com, barrypollard@google.com, w3cid 138839
+Editor: Guohui Deng, Microsoft https://microsoft.com, guohuideng@microsoft.com, w3cid 158258
 Former Editor: Shubhie Panicker, Google https://google.com
 Repository: w3c/device-memory
 Abstract: This document defines a HTTP Client Hint header and a JavaScript API to surface device capability for memory i.e. device RAM, in order to enable web apps to customize content depending on device memory constraints.
@@ -69,9 +70,9 @@ The ABNF (Augmented Backus-Naur Form) syntax for the <code>Sec-CH-Device-Memory<
 <h3 dfn>Computing Device Memory Value</h3>
 The value is calculated by using the actual device memory in MiB then rounding it to the nearest number where only the most significant bit can be set and the rest are zeros (nearest power of two). Then dividing that number by 1024.0 to get the value in GiB.
 
-An upper bound and a lower bound should be set on the list of values.
+An upper bound and a lower bound should be set on the list of values. The range between the upper and the lower bounds should include the majority of device memory values but exclude rare device memory values to mitigate device fingerprinting.
 
-    NOTE: While implementations may choose different values, the recommended upper bound is 8GiB and the recommended lower bound is 0.25GiB (or 256MiB).
+    NOTE: The Implementations may set upper and lower bounds and adjust them dynamically over time. These bounds may even differ on different device types, or across various geographic regions.
 
 If <code>Sec-CH-Device-Memory</code> header field occurs in a message more than once, the last value overrides all previous occurrences.
 
@@ -89,8 +90,6 @@ If <code>Sec-CH-Device-Memory</code> header field occurs in a message more than 
 <pre class="highlight lang-http">
     Sec-CH-Device-Memory: 1
 </pre>
-
-A full list of possible values should be as follows: 0.25, 0.5, 1, 2, 4, 8
 
 Device Memory JS API {#sec-device-memory-js-api}
 =======================================
