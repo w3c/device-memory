@@ -12,7 +12,7 @@ Developers are interested in the “device class” for the following known use-
 2. Normalize Metrics: analytics need to be able to normalize their metrics against the device-class. 
 For instance, a 100ms long task is a more severe issue on a Pixel vs. on a low end device.
 
-Device memory is an interesting signal in this context. Low memory devices devices (under 512MB, 512MB-1GB) are widely used in emerging markets. Chrome telemetry indicates a large number of OOM (out-of-memory) crashes on foreground tabs on these devices. In this case, serving a lite version not only improves the user experience, it is necessary for the site to be usable at all (as opposed to crashing due to memory constraints).
+Device memory is an interesting signal in this context. Low memory devices devices are widely used in emerging markets. Chrome telemetry indicates a large number of OOM (out-of-memory) crashes on foreground tabs on these devices. In this case, serving a lite version not only improves the user experience, it is necessary for the site to be usable at all (as opposed to crashing due to memory constraints).
 
 ## Proposal
 We propose a new HTTP Client Hints header and a web exposed API to surface device capabilities for memory (RAM). The mechanism should be extensible to other device capabilities such as CPU i.e. number of cores, clock speed etc.
@@ -33,11 +33,11 @@ The following table illustrates some examples:
 
 | Actual in MiB | Rounded in MiB | Reported in GiB |
 |---------------|----------------|-----------------|
-| 500           | 512            | 0.5             |
-| 512           | 512            | 0.5             |
-| 768           | 512            | 0.5             |
-| 1000          | 1024           | 1               |
 | 1793          | 2048           | 2               |
+| 3000          | 2048           | 2               |
+| 3072          | 2048           | 2               |
+| 24576         | 24576          | 16              |
+| 16384         | 16384          | 16              |
 
 #### Why separate header and rounding?
 HTTP caching doesn't deal well with mixed value headers, therefore separate headers are recommended. Also, rounding down to power of two enables caching and mitigates fingerprinting.
@@ -56,9 +56,9 @@ Servers can advertise support for Client Hints using the Accept-CH header field 
 ```
 
 The Memory request header field is a number for the client’s device memory i.e. approximate amount of ram in GiB.
-eg. 512 MiB will be reported as:
+eg. 2024 MiB will be reported as:
 ```
-  Sec-CH-Device-Memory: 0.5
+  Sec-CH-Device-Memory: 2
 ```
 
 Servers can use this header to customize content for low memory device eg. serve light version of the app or a component such as a video player.
