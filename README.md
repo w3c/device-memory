@@ -29,15 +29,16 @@ The `<value>` is calculated by using the actual device memory in MiB then roundi
 
 An upper bound and a lower bound should be set on the list of values so the fingerprinting is mitigated. The Implementations may set upper and lower bounds and adjust them dynamically over time. These bounds may even differ on different device types.
 
-The following table illustrates some examples:
+The following table illustrates some examples (note no bounds are set in these examples):
 
 | Actual in MiB | Rounded in MiB | Reported in GiB |
 |---------------|----------------|-----------------|
 | 1793          | 2048           | 2               |
 | 3000          | 2048           | 2               |
 | 3072          | 2048           | 2               |
-| 24576         | 24576          | 16              |
+| 3073          | 4096           | 4               |
 | 16384         | 16384          | 16              |
+| 24576         | 16384          | 16              |
 
 #### Why separate header and rounding?
 HTTP caching doesn't deal well with mixed value headers, therefore separate headers are recommended. Also, rounding down to power of two enables caching and mitigates fingerprinting.
