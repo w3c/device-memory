@@ -28,8 +28,7 @@ urlPrefix: https://datatracker.ietf.org/doc/html/rfc8941; spec: rfc8942
         text: HTTP Client Hint; url: #name-introduction
 </pre>
  
-Introduction {#intro}
-============
+# Introduction # {#intro}
 
 A device-class signal is used for several reasons, including:
 
@@ -44,8 +43,7 @@ Device identification and classification based on advertised `User-Agent`, and o
 
 This specification defines a [(Client Hint) Header Field](#sec-device-memory-client-hint-header) and a [JavaScript API](#device-memory-js-api) which exposes the approximate device memory (RAM) to address these needs without needing to use a device database.
 
-Computing device memory value {#computing-device-memory}
-=============================
+# Computing device memory value # {#computing-device-memory}
 
 <div algorithm>
     The <dfn>deviceMemory</dfn> getter steps are:
@@ -70,8 +68,7 @@ Computing device memory value {#computing-device-memory}
 
 Note: The algorithm includes the ability for implementation-specific upper bound and a lower bounds. The range between the upper and the lower bounds should include the majority of device memory values but exclude rare device memory values to mitigate device fingerprinting. Implementations may adjust these bounds over time. These bounds may differ on different device types.
 
-`Sec-CH-Device-Memory` (Client Hint) Header Field {#sec-device-memory-client-hint-header}
-============================================================
+# `Sec-CH-Device-Memory` (Client Hint) Header Field # {#sec-device-memory-client-hint-header}
 
 The `Sec-CH-Device-Memory` header field is a [=HTTP Client Hint=] header.
 It is a [=structured header value=] containing an [=item=] which value is a [=decimal=] that indicates the client’s approximate amount of device memory (RAM) in GiB.
@@ -86,8 +83,7 @@ Sec-CH-Device-Memory = sf-decimal
 
 The `Sec-CH-Device-Memory`'s value should be set to [=this=]'s [=deviceMemory=]
 
-Client Hint examples {#client-hint-examples}
---------------------
+## Client Hint examples ## {#client-hint-examples}
 
 <div class="example">
     A server opts in to receive a `Sec-CH-Device-Memory` [=HTTP Client Hint=] using the `Accept-CH` header field, or an equivalent HTML meta element with http-equiv attribute:
@@ -105,8 +101,7 @@ Client Hint examples {#client-hint-examples}
     ```
 </div>
 
-Device Memory JavaScript API {#device-memory-js-api}
-============================
+# Device Memory JavaScript API # {#device-memory-js-api}
 
 ```idl
 [
@@ -122,8 +117,7 @@ WorkerNavigator includes NavigatorDeviceMemory;
 
 The `deviceMemory` getter steps are to return [=this=]'s [=deviceMemory=]
 
-JavaScript examples {#javascript-examples}
--------------------
+## JavaScript examples ## {#javascript-examples}
 
 <div class="example">
 
@@ -160,20 +154,17 @@ JavaScript examples {#javascript-examples}
     ```
 </div>
 
-Security & privacy considerations {#security-and-privacy}
-=================================
+# Security & privacy considerations # {#security-and-privacy}
 
 `Sec-CH-Device-Memory` Client Hint header and JavaScript API will only be available to HTTPS secure contexts.  
 
 To reduce fingerprinting risk, the reported value is rounded to a single significant bit, as opposed to reporting the exact value. In addition, an implementation-specific upper and lower bound is placed on the reported values. These bounds should be reviewed over time as commonly used device memory characteristics change. Device type should be taken into account when defining these bounds since mobile devices typically have different characteristics than desktops and laptops.
 
-IANA considerations {#iana}
-===================
+# IANA considerations # {#iana}
 
 This document defines the `Sec-CH-Device-Memory` HTTP request header field, and registers them in the permanent message header field registry ([[RFC3864]]).
 
-Sec-CH-Device-Memory Header field {#iana-device-memory}
-=================================
+## `Sec-CH-Device-Memory` header field ## {#iana-device-memory}
 
 : Header field name
 :: Sec-CH-Device-Memory
@@ -188,9 +179,8 @@ Sec-CH-Device-Memory Header field {#iana-device-memory}
 :: IETF
 
 : Specification document
-:: this specification ([[#sec-device-memory-client-hint-header]])
+:: This specification ([[#sec-device-memory-client-hint-header]])
 
-Acknowledgements {#acknowledgements}
-================
+# Acknowledgements # {#acknowledgements}
 
 Special thanks to the previous editor Shubhie Panicker and [all the contributors](https://github.com/w3c/device-memory/graphs/contributors) for their technical input and suggestions that led to improvements to this specification.
