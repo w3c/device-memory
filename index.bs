@@ -13,6 +13,7 @@ Repository: w3c/device-memory
 Abstract: This document defines a HTTP Client Hint header and a JavaScript API to surface device capability for memory (device RAM) in order to enable web apps to customize content depending on device memory constraints.
 Required IDs: sec-device-memory-client-hint-header
 Default Highlight: js
+Markup Shorthands: markdown yes
 </pre>
 
 <pre class="anchors">
@@ -27,22 +28,24 @@ urlPrefix: https://datatracker.ietf.org/doc/html/rfc8941; spec: rfc8942
         text: HTTP Client Hint; url: #name-introduction
 </pre>
  
-<h2 id="intro">Introduction</h2>
+Introduction {#intro}
+============
 
 A device-class signal is used for several reasons, including:
 
-- <strong>Serving a light version of the site or specific components</strong>: This is useful to customize a site for low-end devices. Examples include:
+- **Serving a light version of the site or specific components**: This is useful to customize a site for low-end devices. Examples include:
     - Serve “search lite” - a 10KB search results page used for low-end devices.
     - Serve a light version of video player in a social media web application.
     - Serve lightweight tile images in a map web application.
 
-- <strong>Normalizing metrics</strong>: analytics need to be able to normalize their metrics against the device-class. For instance, a 100ms long task on a high end device is a more severe issue compared to a low-end device.
+- **Normalizing metrics**: analytics need to be able to normalize their metrics against the device-class. For instance, a 100ms long task on a high end device is a more severe issue compared to a low-end device.
 
-Device identification and classification based on advertised User-Agent, and other characteristics of the client, are commonly used to select and provide optimized content. Such solutions frequently rely on commercial device databases, which are costly, hard to integrate, and hard to maintain.
+Device identification and classification based on advertised `User-Agent`, and other characteristics of the client, are commonly used to select and provide optimized content. Such solutions frequently rely on commercial device databases, which are costly, hard to integrate, and hard to maintain.
 
-This specification defines a <a href="#sec-device-memory-client-hint-header">(Client Hint) Header Field</a> and a <a href="#device-memory-js-api">JavaScript API</a> which exposes the approximate device memory (RAM) to address these needs without needing to use a device database.
+This specification defines a [(Client Hint) Header Field](#sec-device-memory-client-hint-header) and a [JavaScript API](#device-memory-js-api) which exposes the approximate device memory (RAM) to address these needs without needing to use a device database.
 
-<h2 dfn>Computing device memory value</h2>
+Computing device memory value {#computing-device-memory}
+=============================
 
 <div algorithm>
     The <dfn>deviceMemory</dfn> getter steps are:
@@ -67,42 +70,45 @@ This specification defines a <a href="#sec-device-memory-client-hint-header">(Cl
 
 Note: The algorithm includes the ability for implementation-specific upper bound and a lower bounds. The range between the upper and the lower bounds should include the majority of device memory values but exclude rare device memory values to mitigate device fingerprinting. Implementations may adjust these bounds over time. These bounds may differ on different device types.
 
-<h2 id="sec-device-memory-client-hint-header"><code>Sec-CH-Device-Memory</code> (Client Hint) Header Field</h2>
+`Sec-CH-Device-Memory` (Client Hint) Header Field {#sec-device-memory-client-hint-header}
+============================================================
 
-The <code>Sec-CH-Device-Memory</code> header field is a [=HTTP Client Hint=] header.
+The `Sec-CH-Device-Memory` header field is a [=HTTP Client Hint=] header.
 It is a [=structured header value=] containing an [=item=] which value is a [=decimal=] that indicates the client’s approximate amount of device memory (RAM) in GiB.
 
-If <code>Sec-CH-Device-Memory</code> header field occurs in a message more than once, the last value overrides all previous occurrences.
+If `Sec-CH-Device-Memory` header field occurs in a message more than once, the last value overrides all previous occurrences.
 
-The ABNF (Augmented Backus-Naur Form) syntax for the <code>Sec-CH-Device-Memory</code> header field is as follows:
+The ABNF (Augmented Backus-Naur Form) syntax for the `Sec-CH-Device-Memory` header field is as follows:
 
-~~~ abnf
+```abnf
 Sec-CH-Device-Memory = sf-decimal
-~~~
+```
 
-The <code>Sec-CH-Device-Memory</code>'s value should be set to [=this=]'s [=deviceMemory=]
+The `Sec-CH-Device-Memory`'s value should be set to [=this=]'s [=deviceMemory=]
 
-<h3 id="client-hint-examples">Client Hint examples</h3>
+Client Hint examples {#client-hint-examples}
+--------------------
 
 <div class="example">
-    A server opts in to receive a <code>Sec-CH-Device-Memory</code> [=HTTP Client Hint=] using the <code>Accept-CH</code> header field, or an equivalent HTML meta element with http-equiv attribute:
+    A server opts in to receive a `Sec-CH-Device-Memory` [=HTTP Client Hint=] using the `Accept-CH` header field, or an equivalent HTML meta element with http-equiv attribute:
 
-    <pre class="highlight lang-http">
+    ```http
         Accept-CH: Sec-CH-Device-Memory
-    </pre>
+    ```
 
-    In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the <code>Sec-CH-Device-Memory</code> request header field:
+    In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the `Sec-CH-Device-Memory` request header field:
 
-    <pre class="highlight lang-http">
+    ```http
         GET /example HTTP/1.1
         Sec-CH-Device-Memory: 8
         ...
-    </pre>
+    ```
 </div>
 
-<h2 id="device-memory-js-api">Device Memory JavaScript API</h2>
+Device Memory JavaScript API {#device-memory-js-api}
+============================
 
-<pre class="idl">
+```idl
 [
     SecureContext,
     Exposed=(Window,Worker)
@@ -112,11 +118,12 @@ The <code>Sec-CH-Device-Memory</code>'s value should be set to [=this=]'s [=devi
 
 Navigator includes NavigatorDeviceMemory;
 WorkerNavigator includes NavigatorDeviceMemory;
-</pre>
+```
 
-The <code>deviceMemory</code> getter steps are to return [=this=]'s [=deviceMemory=]
+The `deviceMemory` getter steps are to return [=this=]'s [=deviceMemory=]
 
-<h3 id="javascript-examples">JavaScript examples</h3>
+JavaScript examples {#javascript-examples}
+-------------------
 
 <div class="example">
 
@@ -124,7 +131,7 @@ The <code>deviceMemory</code> getter steps are to return [=this=]'s [=deviceMemo
 
     Note: The web application should consider how to handle browsers that do not support the API: either by enabling by default, or disabling by default.
 
-    <pre class="highlight lang-javascript">
+    ```javascript
         const mem = navigator.deviceMemory;
 
         // Either disable features if it is known to be a low-memory device
@@ -137,33 +144,36 @@ The <code>deviceMemory</code> getter steps are to return [=this=]'s [=deviceMemo
         if (!mem || mem > 4) {
             // enable features to provide a better experience
         }
-    </pre>
+    ```
 </div>
 
 <div class="example">
-    A RUM solution can query the device memory using <code>navigator.deviceMemory</code> API and include this in performance beacons as additional information to help explain or segment the data.
+    A RUM solution can query the device memory using `navigator.deviceMemory` API and include this in performance beacons as additional information to help explain or segment the data.
 
-    <pre class="highlight lang-javascript">
+    ```javascript
         const mem = navigator.deviceMemory;
         const analyticsData = {
             memory: mem;
             ... other metrics
         }
         navigator.sendBeacon("/endpoint", analyticsData);
-    </pre>
+    ```
 </div>
 
-<h2 id="security-and-privacy">Security & privacy considerations</h2>
+Security & privacy considerations {#security-and-privacy}
+=================================
 
-<code>Sec-CH-Device-Memory</code> Client Hint header and JavaScript API will only be available to HTTPS secure contexts.  
+`Sec-CH-Device-Memory` Client Hint header and JavaScript API will only be available to HTTPS secure contexts.  
 
 To reduce fingerprinting risk, the reported value is rounded to a single significant bit, as opposed to reporting the exact value. In addition, an implementation-specific upper and lower bound is placed on the reported values. These bounds should be reviewed over time as commonly used device memory characteristics change. Device type should be taken into account when defining these bounds since mobile devices typically have different characteristics than desktops and laptops.
 
-<h2 id="iana">IANA considerations</h2>
+IANA considerations {#iana}
+===================
 
-This document defines the <code>Sec-CH-Device-Memory</code> HTTP request header field, and registers them in the permanent message header field registry ([[RFC3864]]).
+This document defines the `Sec-CH-Device-Memory` HTTP request header field, and registers them in the permanent message header field registry ([[RFC3864]]).
 
-<h3 id="iana-device-memory">Sec-CH-Device-Memory Header field</h3>
+Sec-CH-Device-Memory Header field {#iana-device-memory}
+=================================
 
 : Header field name
 :: Sec-CH-Device-Memory
@@ -180,6 +190,7 @@ This document defines the <code>Sec-CH-Device-Memory</code> HTTP request header 
 : Specification document
 :: this specification ([[#sec-device-memory-client-hint-header]])
 
-<h2 id="acknowledgements">Acknowledgements</h2>
+Acknowledgements {#acknowledgements}
+================
 
-Special thanks to the previous editor Shubhie Panicker and <a href="https://github.com/w3c/device-memory/graphs/contributors">all the contributors</a> for their technical input and suggestions that led to improvements to this specification.
+Special thanks to the previous editor Shubhie Panicker and [all the contributors](https://github.com/w3c/device-memory/graphs/contributors) for their technical input and suggestions that led to improvements to this specification.
