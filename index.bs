@@ -10,7 +10,7 @@ Editor: Barry Pollard, Google https://google.com, barrypollard@google.com, w3cid
 Editor: Guohui Deng, Microsoft https://microsoft.com, guohuideng@microsoft.com, w3cid 158258
 Former Editor: Shubhie Panicker, Google https://google.com
 Repository: w3c/device-memory
-Abstract: This document defines a HTTP Client Hint header and a JavaScript API to surface device capability for memory i.e. device RAM, in order to enable web apps to customize content depending on device memory constraints.
+Abstract: This document defines a HTTP Client Hint header and a JavaScript API to surface device capability for memory (device RAM) in order to enable web apps to customize content depending on device memory constraints.
 Required IDs: sec-device-memory-client-hint-header
 Default Highlight: js
 </pre>
@@ -27,72 +27,81 @@ urlPrefix: https://datatracker.ietf.org/doc/html/rfc8941; spec: rfc8942
         text: HTTP Client Hint; url: #name-introduction
 </pre>
  
-Introduction {#intro}
-=====================
-Developers need device-class signal for:
-1. Serving light version of the site or specific components, for low-end devices. Examples:
-    * Serve Google "search lite" - a 10KB search results page used in EM.
-    * Serve a light version of video player in Facebook.
-    * Serve lightweight tile images in Google Maps.
+<h2 id="intro">Introduction</h2>
 
-2. Normalizing Metrics: analytics need to be able to normalize their metrics against the device-class. For instance, a 100ms long task on a high end device is a more severe issue compared to a low-end device.
+A device-class signal is used for several reasons, including:
 
-Device memory is an especially useful signal for determining “device-class”. Low memory devices devices (under 512MB, 512MB - 1GB) are widely used in emerging markets.
+- <strong>Serving a light version of the site or specific components</strong>: This is useful to customize a site for low-end devices. Examples include:
+    - Serve “search lite” - a 10KB search results page used for low-end devices.
+    - Serve a light version of video player in a social media web application.
+    - Serve lightweight tile images in a map web application.
 
-Usage Example {#example}
-------------------------
-A server opts in to receive a <code>Sec-CH-Device-Memory</code> [=HTTP Client Hint=] using the <code>Accept-CH</code> header field, or an equivalent HTML meta element with http-equiv attribute:
+- <strong>Normalizing metrics</strong>: analytics need to be able to normalize their metrics against the device-class. For instance, a 100ms long task on a high end device is a more severe issue compared to a low-end device.
 
-<pre class="highlight lang-http">
-    Accept-CH: Sec-CH-Device-Memory
-</pre>
+Device identification and classification based on advertised User-Agent, and other characteristics of the client, are commonly used to select and provide optimized content. Such solutions frequently rely on commercial device databases, which are costly, hard to integrate, and hard to maintain.
 
-In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the <code>Sec-CH-Device-Memory</code> request header field:
+This specification defines a <a href="#sec-device-memory-client-hint-header">(Client Hint) Header Field</a> and a <a href="#device-memory-js-api">JavaScript API</a> which exposes the approximate device memory (RAM) to address these needs without needing to use a device database.
 
-<pre class="highlight lang-http">
-    GET /example HTTP/1.1
-    Sec-CH-Device-Memory: 0.5
-    ...
-</pre>
+<h2 dfn>Computing device memory value</h2>
 
-<code>Sec-CH-Device-Memory</code> (Client Hint) Header Field {#sec-device-memory-client-hint-header}
-=======================================
+<div algorithm>
+    The <dfn>deviceMemory</dfn> getter steps are:
+
+    1.  Let |physicalDeviceMemory| be the amount of physical memory in bytes.
+    2.  Let |minimumLowerBound| be an implementation-specific minimum reported value.
+    3.  Let |maximumUpperBound| be an implementation-specific maximum reported value.
+    4.  Let |deviceMemory| be |physicalDeviceMemory|.
+    5.  Let |power| be 0.
+    6.  [=iteration/While=] |deviceMemory| is greater than 0:
+            1.  Bitwise shift |deviceMemory| right 1 place.
+            2.  Increment |power| by 1.
+    7.  Let |lowerBound| be 1 to the power of |power|.
+    8.  Let |upperBound| be 2 to the power of |power|.
+    9.  If |physicalDeviceMemory| - |lowerBound| <= |physicalDeviceMemory| - |upperBound|, then |deviceMemory|'s value is |lowerBound|.
+    10.  Otherwise |deviceMemory|'s value is |upperBound|.
+    11.  |deviceMemory| is |deviceMemory| / 1024.0.
+    12.  If |deviceMemory| < |minimumLowerBound|, then |deviceMemory| is |minimumLowerBound|.
+    13.  If |deviceMemory| > |maximumUpperBound|, then |deviceMemory| is |maximumUpperBound|.
+    14.  Return |deviceMemory|.
+</div>
+
+Note: The algorithm includes the ability for implementation-specific upper bound and a lower bounds. The range between the upper and the lower bounds should include the majority of device memory values but exclude rare device memory values to mitigate device fingerprinting. Implementations may adjust these bounds over time. These bounds may differ on different device types.
+
+<h2 id="sec-device-memory-client-hint-header"><code>Sec-CH-Device-Memory</code> (Client Hint) Header Field</h2>
 
 The <code>Sec-CH-Device-Memory</code> header field is a [=HTTP Client Hint=] header.
-It is a [=structured header value=] containing an [=item=] which value is a [=decimal=] that indicates the client’s device memory, i.e. the approximate amount of RAM in GiB.
+It is a [=structured header value=] containing an [=item=] which value is a [=decimal=] that indicates the client’s approximate amount of device memory (RAM) in GiB.
+
+If <code>Sec-CH-Device-Memory</code> header field occurs in a message more than once, the last value overrides all previous occurrences.
 
 The ABNF (Augmented Backus-Naur Form) syntax for the <code>Sec-CH-Device-Memory</code> header field is as follows:
 
 ~~~ abnf
-  Sec-CH-Device-Memory = sf-decimal
+Sec-CH-Device-Memory = sf-decimal
 ~~~
 
-<h3 dfn>Computing Device Memory Value</h3>
-The value is calculated by using the actual device memory in MiB then rounding it to the nearest number where only the most significant bit can be set and the rest are zeros (nearest power of two). Then dividing that number by 1024.0 to get the value in GiB.
+The <code>Sec-CH-Device-Memory</code>'s value should be set to [=this=]'s [=deviceMemory=]
 
-An upper bound and a lower bound should be set on the list of values. The range between the upper and the lower bounds should include the majority of device memory values but exclude rare device memory values to mitigate device fingerprinting.
+<h3 id="client-hint-examples">Client Hint examples</h3>
 
-    NOTE: The Implementations may set upper and lower bounds and adjust them dynamically over time. These bounds may even differ on different device types.
+<div class="example">
+    A server opts in to receive a <code>Sec-CH-Device-Memory</code> [=HTTP Client Hint=] using the <code>Accept-CH</code> header field, or an equivalent HTML meta element with http-equiv attribute:
 
-If <code>Sec-CH-Device-Memory</code> header field occurs in a message more than once, the last value overrides all previous occurrences.
+    <pre class="highlight lang-http">
+        Accept-CH: Sec-CH-Device-Memory
+    </pre>
 
+    In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the <code>Sec-CH-Device-Memory</code> request header field:
 
-<h3 dfn>Examples</h3>
+    <pre class="highlight lang-http">
+        GET /example HTTP/1.1
+        Sec-CH-Device-Memory: 8
+        ...
+    </pre>
+</div>
 
-512 MiB will be reported as:
+<h2 id="device-memory-js-api">Device Memory JavaScript API</h2>
 
-<pre class="highlight lang-http">
-    Sec-CH-Device-Memory: 0.5
-</pre>
-
-1000 MiB will be reported as:
-
-<pre class="highlight lang-http">
-    Sec-CH-Device-Memory: 1
-</pre>
-
-Device Memory JS API {#sec-device-memory-js-api}
-=======================================
 <pre class="idl">
 [
     SecureContext,
@@ -105,24 +114,56 @@ Navigator includes NavigatorDeviceMemory;
 WorkerNavigator includes NavigatorDeviceMemory;
 </pre>
 
-    NOTE: <code>self.navigator.deviceMemory</code> Returns the amount of ram in GiB as described in [[#computing-device-memory-value]]
+The <code>deviceMemory</code> getter steps are to return [=this=]'s [=deviceMemory=]
 
-Security Considerations {#sec-security-considerations}
-=======================================
+<h3 id="javascript-examples">JavaScript examples</h3>
 
-<code>Sec-CH-Device-Memory</code> Client Hint header and JS API will only be available to HTTPS secure contexts.  
+<div class="example">
 
-Device identification and classification (e.g. device type and class) based on advertised User-Agent, and other characteristics of the client, are commonly used to select and provide optimized content. Such solutions frequently rely on commercial device databases, which are costly, hard to integrate, and hard to maintain. This specification defines a mechanism to obtain device memory capability that addresses these technical challenges.
+    A web application can either enable or disable features based on device memory.
 
-To reduce fingerprinting risk, reported value is rounded to single most significant bit, as opposed to reporting the exact value. In addition, an upper and lower bound is placed on the reported values.
+    Note: The web application should consider how to handle browsers that do not support the API: either by enabling by default, or disabling by default.
 
-IANA considerations {#iana}
-===================
+    <pre class="highlight lang-javascript">
+        const mem = navigator.deviceMemory;
+
+        // Either disable features if it is known to be a low-memory device
+        if (mem && mem < 2) {
+            // disable features to provide a better experience
+        }
+
+        // Or, alternatively only enable features if the device memory is
+        // either not provided, or known to be above minimum requirements
+        if (!mem || mem > 4) {
+            // enable features to provide a better experience
+        }
+    </pre>
+</div>
+
+<div class="example">
+    A RUM solution can query the device memory using <code>navigator.deviceMemory</code> API and include this in performance beacons as additional information to help explain or segment the data.
+
+    <pre class="highlight lang-javascript">
+        const mem = navigator.deviceMemory;
+        const analyticsData = {
+            memory: mem;
+            ... other metrics
+        }
+        navigator.sendBeacon("/endpoint", analyticsData);
+    </pre>
+</div>
+
+<h2 id="security-and-privacy">Security & privacy considerations</h2>
+
+<code>Sec-CH-Device-Memory</code> Client Hint header and JavaScript API will only be available to HTTPS secure contexts.  
+
+To reduce fingerprinting risk, the reported value is rounded to a single significant bit, as opposed to reporting the exact value. In addition, an implementation-specific upper and lower bound is placed on the reported values. These bounds should be reviewed over time as commonly used device memory characteristics change. Device type should be taken into account when defining these bounds since mobile devices typically have different characteristics than desktops and laptops.
+
+<h2 id="iana">IANA considerations</h2>
 
 This document defines the <code>Sec-CH-Device-Memory</code> HTTP request header field, and registers them in the permanent message header field registry ([[RFC3864]]).
 
-Sec-CH-Device-Memory Header field {#iana-device-memory}
----------------------------------
+<h3 id="iana-device-memory">Sec-CH-Device-Memory Header field</h3>
 
 : Header field name
 :: Sec-CH-Device-Memory
@@ -139,10 +180,6 @@ Sec-CH-Device-Memory Header field {#iana-device-memory}
 : Specification document
 :: this specification ([[#sec-device-memory-client-hint-header]])
 
-<!-- ============================================================ -->
-<h2 id=acknowledgements>Acknowledgements</h2>
-<!-- ============================================================ -->
+<h2 id="acknowledgements">Acknowledgements</h2>
 
-
-Special thanks to <a href="https://github.com/w3c/device-memory/graphs/contributors">all the contributors</a> for their technical input and suggestions that led to improvements to this
-specification.
+Special thanks to the previous editor Shubhie Panicker and <a href="https://github.com/w3c/device-memory/graphs/contributors">all the contributors</a> for their technical input and suggestions that led to improvements to this specification.
