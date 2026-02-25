@@ -46,19 +46,19 @@ This specification defines a [(Client Hint) Header Field](#sec-device-memory-cli
 # Computing device memory value # {#computing-device-memory}
 
 <div algorithm>
-    The <dfn>deviceMemory</dfn> getter steps are:
+    The [=user agent=]'s <dfn>deviceMemory</dfn> is calculated by these steps:
 
     1.  Let |physicalDeviceMemory| be the amount of physical memory in bytes.
-    2.  Let |minimumLowerBound| be an implementation-specific minimum reported value.
-    3.  Let |maximumUpperBound| be an implementation-specific maximum reported value.
+    2.  Let |minimumLowerBound| be an [=implementation-defined=] minimum bound.
+    3.  Let |maximumUpperBound| be an [=implementation-defined=] maximum bound.
     4.  Let |deviceMemory| be |physicalDeviceMemory|.
     5.  Let |power| be 0.
     6.  [=iteration/While=] |deviceMemory| is greater than 0:
             1.  Bitwise shift |deviceMemory| right 1 place.
             2.  Increment |power| by 1.
-    7.  Let |lowerBound| be 1 to the power of |power|.
-    8.  Let |upperBound| be 2 to the power of |power|.
-    9.  If |physicalDeviceMemory| - |lowerBound| <= |physicalDeviceMemory| - |upperBound|, then |deviceMemory|'s value is |lowerBound|.
+    7.  Let |lowerBound| be 2 to the power of |power|.
+    8.  Let |upperBound| be 2 to the power of |power + 1|.
+    9.  If |physicalDeviceMemory| − |lowerBound| &le; |upperBound| − |physicalDeviceMemory|, then |deviceMemory|'s value is |lowerBound|.
     10.  Otherwise |deviceMemory|'s value is |upperBound|.
     11.  |deviceMemory| is |deviceMemory| / 1024.0.
     12.  If |deviceMemory| < |minimumLowerBound|, then |deviceMemory| is |minimumLowerBound|.
@@ -66,33 +66,33 @@ This specification defines a [(Client Hint) Header Field](#sec-device-memory-cli
     14.  Return |deviceMemory|.
 </div>
 
-Note: The algorithm includes the ability for implementation-specific upper bound and a lower bounds. The range between the upper and the lower bounds should include the majority of device memory values but exclude rare device memory values to mitigate device fingerprinting. Implementations may adjust these bounds over time. These bounds may differ on different device types.
+The algorithm includes the ability for [=implementation-defined=] upper bound and a lower bounds. The range between the upper and the lower bounds should include the majority of device memory values but exclude rare device memory values to mitigate device fingerprinting. Implementations may adjust these bounds over time. These bounds may differ on different device types.
 
 # `Sec-CH-Device-Memory` (Client Hint) Header Field # {#sec-device-memory-client-hint-header}
 
-The `Sec-CH-Device-Memory` header field is a [=HTTP Client Hint=] header.
+The <dfn http-header>`Sec-CH-Device-Memory`</dfn> header field is a [=HTTP Client Hint=] header.
 It is a [=structured header value=] containing an [=item=] which value is a [=decimal=] that indicates the client’s approximate amount of device memory (RAM) in GiB.
 
-If `Sec-CH-Device-Memory` header field occurs in a message more than once, the last value overrides all previous occurrences.
+If [:Sec-CH-Device-Memory:] header field occurs in a message more than once, the last value overrides all previous occurrences.
 
-The ABNF (Augmented Backus-Naur Form) syntax for the `Sec-CH-Device-Memory` header field is as follows:
+The ABNF (Augmented Backus-Naur Form) syntax for the [:Sec-CH-Device-Memory:] header field is as follows:
 
 ```abnf
 Sec-CH-Device-Memory = sf-decimal
 ```
 
-The `Sec-CH-Device-Memory`'s value should be set to [=this=]'s [=deviceMemory=]
+The [:Sec-CH-Device-Memory:]'s value [=user agent=]'s [=deviceMemory=].
 
 ## Client Hint examples ## {#client-hint-examples}
 
 <div class="example">
-    A server opts in to receive a `Sec-CH-Device-Memory` [=HTTP Client Hint=] using the `Accept-CH` header field, or an equivalent HTML meta element with http-equiv attribute:
+    A server opts in to receive a [:Sec-CH-Device-Memory:] [=HTTP Client Hint=] using the `Accept-CH` header field, or an equivalent HTML meta element with http-equiv attribute:
 
     ```http
         Accept-CH: Sec-CH-Device-Memory
     ```
 
-    In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the `Sec-CH-Device-Memory` request header field:
+    In turn, on receiving the above preferences from the server, a compatible user agent would then advertise the device capability for memory, via the [:Sec-CH-Device-Memory:] request header field:
 
     ```http
         GET /example HTTP/1.1
@@ -115,7 +115,7 @@ Navigator includes NavigatorDeviceMemory;
 WorkerNavigator includes NavigatorDeviceMemory;
 ```
 
-The `deviceMemory` getter steps are to return [=this=]'s [=deviceMemory=]
+The [=NavigatorDeviceMemory=]'s [=NavigatorDeviceMemory/deviceMemory=] getter steps are to return the [=user agent=]'s [=deviceMemory=].
 
 ## JavaScript examples ## {#javascript-examples}
 
@@ -156,13 +156,13 @@ The `deviceMemory` getter steps are to return [=this=]'s [=deviceMemory=]
 
 # Security & privacy considerations # {#security-and-privacy}
 
-`Sec-CH-Device-Memory` Client Hint header and JavaScript API will only be available to HTTPS secure contexts.  
+[:Sec-CH-Device-Memory:] Client Hint header and JavaScript API will only be available to HTTPS secure contexts.  
 
 To reduce fingerprinting risk, the reported value is rounded to a single significant bit, as opposed to reporting the exact value. In addition, an implementation-specific upper and lower bound is placed on the reported values. These bounds should be reviewed over time as commonly used device memory characteristics change. Device type should be taken into account when defining these bounds since mobile devices typically have different characteristics than desktops and laptops.
 
 # IANA considerations # {#iana}
 
-This document defines the `Sec-CH-Device-Memory` HTTP request header field, and registers them in the permanent message header field registry ([[RFC3864]]).
+This document defines the [:Sec-CH-Device-Memory:] HTTP request header field, and registers them in the permanent message header field registry ([[RFC3864]]).
 
 ## `Sec-CH-Device-Memory` header field ## {#iana-device-memory}
 
