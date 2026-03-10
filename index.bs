@@ -81,7 +81,7 @@ The ABNF (Augmented Backus-Naur Form) syntax for the [:Sec-CH-Device-Memory:] he
 Sec-CH-Device-Memory = sf-decimal
 ```
 
-The [:Sec-CH-Device-Memory:]'s value [=user agent=]'s [=deviceMemory=].
+The [:Sec-CH-Device-Memory:]'s value should be set to the [=user agent=]'s [=deviceMemory=].
 
 ## Client Hint examples ## {#client-hint-examples}
 
