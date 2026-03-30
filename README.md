@@ -1,5 +1,7 @@
 # Device Memory
 
+For the Working Draft, see https://www.w3.org/TR/device-memory/
+
 ## Motivation & Use cases
 A “one-size-fits-all” web experience does not work in a world with widely varying device capabilities. Web apps that delight users on high end devices can be unusable on low end devices, particularly in emerging markets.
 To support a diverse web ecosystem that is inclusive of users on low end devices, apps need to be able to tailor their content to the device constraints. This allows users to consume content suited to their device, and ensures they have a good experience and fewer frustrations.
@@ -15,11 +17,9 @@ For instance, a 100ms long task is a more severe issue on a Pixel vs. on a low e
 Device memory is an interesting signal in this context. Low memory devices devices are widely used in emerging markets. Chrome telemetry indicates a large number of OOM (out-of-memory) crashes on foreground tabs on these devices. In this case, serving a lite version not only improves the user experience, it is necessary for the site to be usable at all (as opposed to crashing due to memory constraints).
 
 ## Proposal
-We propose a new HTTP Client Hints header and a web exposed API to surface device capabilities for memory (RAM). The mechanism should be extensible to other device capabilities such as CPU i.e. number of cores, clock speed etc.
+We propose a new HTTP Client Hints header and a web exposed API to surface device capabilities for memory (RAM).
 A Client Hints header will enable the server to deliver appropriate content, eg. a “lite” version of the site.
 The JS API will be a convenience for analytics reporting and may be used to make runtime decisions eg. using more storage vs. making additional requests, requesting appropriate resources from the server etc.
-
-ASIDE: the JS API for CPU Cores is already available via hardwareConcurrency API
 
 ### The Header
 Proposed Client Hints Header for memory: `Sec-CH-Device-Memory`\
@@ -33,12 +33,12 @@ The following table illustrates some examples (note no bounds are set in these e
 
 | Actual in MiB | Rounded in MiB | Reported in GiB |
 |---------------|----------------|-----------------|
-| 1793          | 2048           | 2               |
-| 3000          | 2048           | 2               |
-| 3072          | 2048           | 2               |
-| 3073          | 4096           | 4               |
-| 16384         | 16384          | 16              |
-| 24576         | 16384          | 16              |
+| 1,793         | 2,048          | 2               |
+| 3,000         | 2,048          | 2               |
+| 3,072         | 2,048          | 2               |
+| 3,073         | 4,096          | 4               |
+| 16,384        | 16,384         | 16              |
+| 24,576        | 16,384         | 16              |
 
 #### Why separate header and rounding?
 HTTP caching doesn't deal well with mixed value headers, therefore separate headers are recommended. Also, rounding down to power of two enables caching and mitigates fingerprinting.
@@ -68,7 +68,7 @@ NOTE: This header will not be immediately available in all browser. Do not assum
 
 ### The web exposed API
 We propose adding the following API to navigator: `navigator.deviceMemory`
-which returns number of GiB of ram (floating point number) rounded down to the nearest power of two (same as the header).
+which returns number of GiB of ram (floating point number) rounded to the nearest power of two (same as the header).
 
 ## Why not surface Device Class directly?
 While exposing a composite “Device Class” would be useful for developers, it has a number of challenges: it’s hard to specify in a future-proof manner as it is constantly changing, it requires significant and ongoing work (constantly update algorithm OR classify known devices), it is difficult to reach agreement amongst vendors, and come up with something that works for all web sites etc.
@@ -90,5 +90,3 @@ NOTE: Device identification is already possible and rampant today, based on UA s
 * [HTTP Client Hints User Guide](https://developers.google.com/web/updates/2015/09/automating-resource-selection-with-client-hints)
 * [Similar proposal for Network Speed](https://github.com/WICG/netinfo/issues/46)
 * [NavigatorConcurrentHardware API](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorConcurrentHardware)
-
-
