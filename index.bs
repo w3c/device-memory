@@ -102,7 +102,7 @@ The [:Sec-CH-Device-Memory:]'s value should be set to the [=user agent=]'s [=dev
 
 # Device Memory JavaScript API # {#device-memory-js-api}
 
-```idl
+<pre class="idl">
 [
     SecureContext,
     Exposed=(Window,Worker)
@@ -112,9 +112,9 @@ The [:Sec-CH-Device-Memory:]'s value should be set to the [=user agent=]'s [=dev
 
 Navigator includes NavigatorDeviceMemory;
 WorkerNavigator includes NavigatorDeviceMemory;
-```
+</pre>
 
-The [=NavigatorDeviceMemory=]'s [=NavigatorDeviceMemory/deviceMemory=] getter steps are to return the [=user agent=]'s [=deviceMemory=].
+The {{NavigatorDeviceMemory}}'s {{NavigatorDeviceMemory/deviceMemory}} getter steps are to return the [=user agent=]'s [=deviceMemory=].
 
 ## JavaScript examples ## {#javascript-examples}
 
